@@ -1,0 +1,2 @@
+# Ignore credential file with secret keys
+ScheduleBuilder/core/credentials.json
