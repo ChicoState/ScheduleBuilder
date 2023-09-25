@@ -17,8 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from core import views as core_views
-
+from google_calendar import views as cal_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', core_views.main),
+    path('calendar/', cal_views.main),
+    path('add_assigment/',cal_views.add)
+    
 ]

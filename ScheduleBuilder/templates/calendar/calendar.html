@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head> </head>
+  <body>
+    <h1>Upcoming Assigmments</h1>
+    <a href="add_assignment/">Add Assignment</a>
+    <ul>
+      {% for result in results %}
+      <li>{{result.start.date}}{% if result.end.date %}-{% endif%}{{result.end.date}}: {{result.summary}}</li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
