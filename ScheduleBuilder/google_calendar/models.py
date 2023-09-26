@@ -1,7 +1,7 @@
 from django.db import models
 import datetime
 
-SUB_TYPES = (("f", "File Upload"), ("t", "Text Submission"), ("i", "Image"), ("l", "Link"))
+SUB_TYPES = [("f", "File Upload"), ("t", "Text Submission"), ("i", "Image"), ("l", "Link")]
 
 class SubmitType(models.Model):
     submission_type = models.CharField(max_length=15, choices=SUB_TYPES, default="File Upload")
