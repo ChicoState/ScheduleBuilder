@@ -22,6 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', core_views.main),
     path('calendar/', cal_views.main),
-    path('add_assigment/',cal_views.add)
+    path('calendar/add_assignment/',cal_views.add)
     
 ]
