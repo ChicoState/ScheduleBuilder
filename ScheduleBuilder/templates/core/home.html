@@ -18,4 +18,15 @@
 </head>
 <body>
     <center><h1>Schedule Builder</h1></center>
+    <h1>Syllabus Parser</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload Syllabus</button>
+    </form>
+    {% if syllabus_contents %}
+    <h2>Uploaded Syllabus Contents:</h2>
+    <pre>{{ syllabus_contents }}</pre>
+    {% endif %}
 </body>
+</html>
