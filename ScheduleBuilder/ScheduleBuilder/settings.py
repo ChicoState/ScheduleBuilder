@@ -30,8 +30,10 @@ SECRET_KEY = 'django-insecure-zv8_2&5p_k(hrqhnzrqqrin*3xa4tc9ab586mxli&b(6lveb0@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
+
+DATE_INPUT_FORMATS = ['%Y-%m-%d','%m/%d/%Y','%m/%d/%y']
 
 # Application definition
 

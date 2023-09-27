@@ -12,6 +12,6 @@ class Event(models.Model):
     assignment_name = models.CharField(verbose_name="Assignment Title", max_length=60)
     class_name = models.CharField(verbose_name="Assignment's class", max_length=9)
     # professor = models.CharField(verbose_name="Professor who assigned", max_length=60)
-    submission_type = models.ForeignKey(SubmitType, on_delete=models.CASCADE)
+    # submission_type = models.ForeignKey(SubmitType, on_delete=models.CASCADE, blank=True, null=True)
     assigned_date = models.DateField(default=datetime.date.today)
-    due_date = models.DateTimeField(default=datetime.datetime.today)
+    due_date = models.DateField(default=datetime.date.today)
