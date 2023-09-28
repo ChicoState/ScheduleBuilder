@@ -10,3 +10,5 @@ ScheduleBuilder/.env
 calendar-credentials.json
 
 __pycache__/
+# Ignore credential file with secret keys
+ScheduleBuilder/core/credentials.json

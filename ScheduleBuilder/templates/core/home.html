@@ -12,11 +12,22 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="" rel="stylesheet">
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'final.css' %}">
     <title>Schedule Bulder</title>
 
 </head>
 <body>
     <center><h1>Schedule Builder</h1></center>
+    <h1>Syllabus Parser</h1>
     <a href="calendar/">Connect to Google Calendar</a>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload Syllabus</button>
+    </form>
+    {% if syllabus_contents %}
+    <h2>Uploaded Syllabus Contents:</h2>
+    <pre>{{ syllabus_contents }}</pre>
+    {% endif %}
 </body>
+</html>

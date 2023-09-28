@@ -1,0 +1,21 @@
+<!-- core/templates/core/syllabus_result.html -->
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'final.css' %}">
+    <title>Syllabus Result</title>
+</head>
+
+<body>
+    <center><h1>Syllabus Result</h1></center>
+    
+    {% if Important_Syllabus_Info %}
+        <h2>Syllabus_Contents</h2>
+        {{ Important_Syllabus_Info}}
+    {% endif %}
+</body>
+
+</html>
