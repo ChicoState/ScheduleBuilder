@@ -1,10 +1,11 @@
 from django import forms
 from google_calendar.models import SubmitType, Event
 
+# Valid date formats 
 DATE_INPUT_FORMATS = ['%Y-%m-%d','%m/%d/%Y','%m/%d/%y']
 DATETIME_INPUT_FORMATS = ['%Y-%m-%d %H:%M','%m/%d/%Y %H:%M','%m/%d/%y %H:%M']
 
-
+# form for adding an event model into the database / calendar
 class EventForm(forms.ModelForm):
     assignment_name = forms.CharField(widget=forms.TextInput(attrs={'size': '80'}))
     class_name = forms.CharField(widget=forms.TextInput(attrs={'size': '80'}))

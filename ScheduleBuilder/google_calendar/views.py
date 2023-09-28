@@ -6,40 +6,33 @@ from google_calendar.forms import EventForm, SubmitType
 from decouple import config
 from google.oauth2 import service_account
 import googleapiclient.discovery
-import datetime
 
+# constants for connecting to google calendar API
 CAL_ID = config('CAL_ID')
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 SERVICE_ACCOUNT_FILE = './core/calendar-credentials.json'
 
+# view for localhost/calendar/
 def main(request):
-    # if SubmitType.objects.count() == 0:
-        
-    # results = test_calendar()
     results = []
-    
     context = {"results": results}
     return render(request, 'calendar/calendar.html', context)
 
-
+# View for localhost/calendar/add/
 def add(request):
+    # Credentials to connect to google cloud API and service account to add events to calendar
     credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
     service = googleapiclient.discovery.build('calendar', 'v3', credentials=credentials)
     if request.method == 'POST':
         if 'add' in request.POST:
+            # form to add event
             add_form = EventForm(request.POST)
             if add_form.is_valid():
                 event = add_form.save(commit=False)
                 event.save()
-                
-                print(type(add_form.cleaned_data['assigned_date']))
-                print(type(add_form.cleaned_data['due_date']))
+                # need to convert dates into ISO format for calendar events
                 assigned_date = add_form.cleaned_data['assigned_date'].isoformat()
-                print(f"ASSIGNED DATE: {assigned_date}")
                 due_date = add_form.cleaned_data['due_date'].isoformat()
-                print(f"DUE DATE: {due_date}")
-                # datetime.combine(add_form.cleaned_data["assigned_date"], datetime.min.time())
-                
                 # CREATE A NEW EVENT IN CALENDAR
                 new_event = {
                 'summary': add_form.cleaned_data['assignment_name'],
@@ -54,24 +47,11 @@ def add(request):
                     'timeZone': 'America/Los_Angeles',
                 },
                 }
-                ####################
-                # new_event = {
-                #     'summary': add_form.cleaned_data['assignment_name'],
-                #     'location': add_form.cleaned_data['class_name'],
-                #     # 'description': add_form.cleaned_data['submission_type'],
-                #     'start': {
-                #         'date': f'{assigned_date}',
-                #         'timeZone': 'America/Los_Angeles'
-                #     },
-                #     'end': {
-                #         'date': f'{due_date}',
-                #         'timeZone': 'America/Los_Angeles'
-                #     },
-                # }
-                ######################
+                # add event to calendar
                 service.events().insert(calendarId=CAL_ID, body=new_event).execute()
                 print('EVENT CREATED')
                 return redirect('/calendar/')
+            # if add form isnt valid
             else:
                 context = {
                     'form_data': add_form

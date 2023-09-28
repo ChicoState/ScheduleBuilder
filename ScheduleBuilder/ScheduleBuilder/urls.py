@@ -20,8 +20,8 @@ from core import views as core_views
 from google_calendar import views as cal_views
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', core_views.main),
-    path('calendar/', cal_views.main),
-    path('calendar/add_assignment/',cal_views.add)
+    path('', core_views.main, name='home'),
+    path('calendar/', cal_views.main, name='calendar'),
+    path('calendar/add_assignment/',cal_views.add, name='calendar-add')
     
 ]
