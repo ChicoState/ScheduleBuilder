@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from .forms import UploadSyllabusForm
 from PyPDF2 import PdfReader
 import pandas as pd
+
 # for when we implement login features
 from django.contrib.auth import authenticate, login, logout
 
