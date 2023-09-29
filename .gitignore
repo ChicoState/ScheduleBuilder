@@ -8,7 +8,6 @@ ScheduleBuilder/.env
 
 # this token contains your sensitive google service account info
 calendar-credentials.json
-
 __pycache__/
 # Ignore credential file with secret keys
 ScheduleBuilder/core/credentials.json

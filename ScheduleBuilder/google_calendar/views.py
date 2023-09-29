@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from google_calendar.calendar_API import test_calendar
 from google_calendar.forms import EventForm, SubmitType
 
 from decouple import config
