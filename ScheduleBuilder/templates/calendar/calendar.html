@@ -1,16 +1,86 @@
 <!DOCTYPE html>
 <html>
-  <head> </head>
-  <body>
-    <h1>Upcoming Assigmments</h1>
-    <a href="add_assignment/">Add Assignment</a>
+<head>
+    <style>
+        body {
+            background-color: #1f1f1f;
+            color: #f0f0f0; 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            text-align: center; 
+        }
+
+        h1 {
+            color: #f0f0f0; 
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        a.button {
+            display: inline-block;
+            padding: 10px 20px;
+            text-decoration: none;
+            background-color: #001f3f; 
+            color: #ffffff; 
+            border-radius: 25px; 
+            margin-bottom: 20px;
+            margin-top: 20px; 
+        }
+
+        a.button:hover {
+            background-color: #003366; 
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        iframe {
+            border: 0;
+            width: calc(100% - 40px); 
+            max-width: 100%; 
+            display: block; 
+            margin: 0 auto 20px; 
+        }
+
+        .line-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            border-top: 1px solid #f0f0f0; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Upcoming Assignments</h1>
+    <div class="line-container">
+        <div class="line"></div>
+    </div>
+    <a href="add_assignment/" class="button">Add Assignment</a>
     <ul>
-      {% comment %} Will print the list of events in a human readable format next sprint {% endcomment %}
-      {% for result in results %}
-      <li>{{result.start.date}}{% if result.end.date %}-{% endif%}{{result.end.date}}: {{result.summary}}</li>
-      {% endfor %}
+        {% comment %} Will print the list of events in a human-readable format next sprint {% endcomment %}
+        {% for result in results %}
+            <li>{{result.start.date}}{% if result.end.date %}-{% endif%}{{result.end.date}}: {{result.summary}}</li>
+        {% endfor %}
     </ul>
     {% comment %} Embedded Calendar  {% endcomment %}
-    <iframe src="https://calendar.google.com/calendar/embed?src=c_6ed17073345c64d5b392f5a8ef7b4a62938f12c8fc5fecfa4b7256ef88acad28%40group.calendar.google.com&ctz=America%2FLos_Angeles" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
-  </body>
+
+    {% comment %} this is the syled version of our normal iframe calendar (yet to be connected to our public calendar) {% endcomment %}
+    <iframe src="https://embed.styledcalendar.com/#acqR6811da0Bdki64hxT" title="Styled Calendar" class="styled-calendar-container"></iframe>
+    <script async type="module" src="https://embed.styledcalendar.com/assets/parent-window.js"></script>
+    {% comment %} connected calendar {% endcomment %}
+    <iframe src="https://calendar.google.com/calendar/embed?src=c_6ed17073345c64d5b392f5a8ef7b4a62938f12c8fc5fecfa4b7256ef88acad28%40group.calendar.google.com&ctz=America%2FLos_Angeles"></iframe>
+</body>
 </html>
