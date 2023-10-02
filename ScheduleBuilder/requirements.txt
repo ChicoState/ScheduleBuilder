@@ -11,6 +11,8 @@ googleapis-common-protos==1.60.0
 python-decouple==3.8
 PyPDF2==3.0.1
 pandas==2.1.1
+nltk==3.8.1
+python-dateutil==2.8.2
 # Not sure if these are required, I'll get rid of them if they're not
 cachetools==5.3.1
 certifi==2023.7.22
