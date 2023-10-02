@@ -13,8 +13,45 @@
     <center><h1>Syllabus Result</h1></center>
     
     {% if Important_Syllabus_Info %}
-        <h2>Syllabus_Contents</h2>
-        {{ Important_Syllabus_Info}}
+        <h2>Course Title:</h2>
+        {{ Course }}
+        <h3>Keywords Count:</h3>
+        <table>
+            <tbody>
+            {% for keyword, occurrences in keywords.items %}
+            <tr>
+                <td> {{ keyword }} </td>
+                <td> {{ occurrences }} </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% for table_data in tables_parsed %}
+        <h2>Table {{ forloop.counter }}</h2>
+            <table>
+                {% for row in table_data %}
+                    <tr>
+                        {% for cell in row %}
+                            <td>
+                                {{ cell }}  {# Display the cell data #}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endfor %}
+        {% if schedule %}
+            <h2>Weekly Outline</h2>
+            <ul>
+                {% for week in schedule %}
+                    <li><strong>{{ week }}</strong></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% if grade_breakdown %}
+        <h3>Grade Breakdown:</h3>
+        {{ grade_breakdown }}
+        {% endif %}
     {% endif %}
 </body>
 
