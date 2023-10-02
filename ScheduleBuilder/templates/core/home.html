@@ -17,16 +17,16 @@
 
 </head>
 <body>
+    <title>Schedule Builder</title>
+
     <center><h1>Schedule Builder</h1></center>
-    <h1>Syllabus Parser</h1>
+    <a href="calendar/">Connect to Google Calendar</a>
+
+    <h1>File Upload</h1>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Upload Syllabus</button>
+        <button type="submit">Upload File</button>
     </form>
-    {% if syllabus_contents %}
-    <h2>Uploaded Syllabus Contents:</h2>
-    <pre>{{ syllabus_contents }}</pre>
-    {% endif %}
 </body>
 </html>

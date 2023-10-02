@@ -1,2 +1,16 @@
+# this hidden folder contains your local, virtual environment
+.env
+
+# this hidden file contains sensitive keys and environmental config vars
+# if you've named your primary project folder something other than
+# 'example' please adjust the following line as needed 
+ScheduleBuilder/.env
+
+# this token contains your sensitive google service account info
+calendar-credentials.json
+__pycache__/
 # Ignore credential file with secret keys
 ScheduleBuilder/core/credentials.json
+
+# Ignore .DS_Store Mac metadata for directories
+**/.DS_Store
