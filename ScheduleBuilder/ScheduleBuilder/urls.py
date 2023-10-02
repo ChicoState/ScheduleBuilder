@@ -20,6 +20,5 @@ from core import views as core_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', core_views.main),
-    path('syllabus-result/', core_views.main, name='syllabus-result'),
+    path('', core_views.main)
 ]
