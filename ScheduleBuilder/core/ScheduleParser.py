@@ -68,7 +68,6 @@ def extract_grade_breakdown(text_content):
     
     if match:
         grades_section = match.group(1).strip()
-        print(type(grades_section))
         return grades_section
     else:
         return None
