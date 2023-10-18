@@ -1,6 +1,6 @@
 # core/views.py
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .forms import UploadFileForm
 from PyPDF2 import PdfReader
 import os
@@ -10,7 +10,12 @@ from .ScheduleParser import parse_keywords, parse_tables, parse_schedule, extrac
 import pdfplumber
 import re
 import pandas as pd
+from django.contrib.auth.views import LoginView
+from .forms import RegistrationForm
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def extract_text_from_pdf(pdf_file):
     text = ""
     pdf = PdfReader(pdf_file)
@@ -21,6 +26,7 @@ def extract_text_from_pdf(pdf_file):
         text += page_text + "\n"
     return text
 
+@login_required
 def main(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
@@ -66,3 +72,15 @@ def main(request):
         form = UploadFileForm()
 
     return render(request, 'core/home.html', {'form': form})
+
+def registration(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('home')  # Redirect to the home page after successful registration
+    else:
+        form = RegistrationForm()
+    return render(request, 'registration/registration.html', {'form': form})
+
