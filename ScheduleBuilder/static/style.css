@@ -1,0 +1,22 @@
+body {
+    background-image: url('background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat; 
+    /*background-position: center center;*/
+}
+
+.bgtable {
+    background-image: url('background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat; 
+}
+
+
+/*.background {
+    background-image: url('templates/wavybackground.avif');
+    background-color: lightblue;
+    background-size: cover; 
+    background-repeat: no-repeat;
+    background-attachment: fixed; 
+}*/
+

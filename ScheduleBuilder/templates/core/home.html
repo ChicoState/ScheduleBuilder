@@ -4,10 +4,12 @@
 <head>
     {% load static %}
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
     <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
     <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
 
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="" rel="stylesheet">
@@ -21,33 +23,40 @@
           border: none;             /* Remove the default button border */
           cursor: pointer;          /* Add a pointer cursor on hover */
         }
-    </style>
-    <title>Schedule Bulder</title>
+        </style>
 
-</head>
 <body>
-    <title>Schedule Builder</title>
 
-    <center><h1>Schedule Builder</h1></center>
-    <a href="calendar/">Connect to Google Calendar</a>
-
-    <h1>File Upload</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Upload File</button>
-    </form>
-
-    <a href="#" id="canvas-login-button" class="btn btn-primary">Login with Canvas</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">Home</a>
+        </div>
+    </nav> 
+    <div class="container mt-4 text-center">
+        <div style="text-align: center;">
+            <h1>Schedule Builder</h1>
+        </div>
+        <a href="/calendar" class="btn btn-primary">Connect to Google Calendar</a>
+        <a href="/canvas" class="btn btn-primary">Login with Canvas</a>
+        <h2 class="mt-4">File Upload</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success">Upload File</button>
+        </form>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                var canvasLoginButton = document.getElementById("canvas-login-button");
+                canvasLoginButton.addEventListener("click", function(e) {
+                    e.preventDefault(); // Prevent the default behavior of the link
+                    window.location.href = "https://canvas.csuchico.edu/"; 
+                });
+            });
+        </script>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $("#canvas-login-button").click(function(e) {
-                e.preventDefault(); // Prevent the default behavior of the link
-                window.location.href = "https://canvas.csuchico.edu/"; // Redirect to your Canvas login page
-            });
-        });
-        </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
 </body>
-</html>
+
+</html> 
