@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
-    'google_calendar'
+    'google_calendar',
+    'social_django'
 ]
 
 MIDDLEWARE = [
