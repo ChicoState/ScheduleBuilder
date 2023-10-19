@@ -20,6 +20,9 @@
         <div class="container">
             <a class="navbar-brand" href="/">Home</a>
                 <a class="nav-link" href="/calendar">Calendar</a>
+                {% if user.is_authenticated %}
+                    <a class="btn btn-danger" href="{% url 'logout' %}">Logout</a>
+                {% endif %}
         </div>
     </nav>
 
