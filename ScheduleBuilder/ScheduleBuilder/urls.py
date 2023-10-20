@@ -23,10 +23,13 @@ from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', core_views.main, name='home'),
-    path('calendar/', cal_views.main, name='calendar'),
+    path('', core_views.home, name='home'),
+    path('calendar/', cal_views.calendar, name='calendar'),
+    path('icalendar/', cal_views.icalendar, name='icalendar-add'),
     path('calendar/add_assignment/',cal_views.add, name='calendar-add'),
     path('login/', LoginView.as_view(), name='login'),
     path('register/', core_views.registration, name='register'),
-    path('logout/', LogoutView.as_view(next_page='login'), name='logout')
+    path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
+    path('parser/', core_views.parser, name='parser'),
+    path('icalendar/', core_views.icalendar, name='icalendar')
 ]

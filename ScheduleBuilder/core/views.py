@@ -27,7 +27,24 @@ def extract_text_from_pdf(pdf_file):
     return text
 
 @login_required
-def main(request):
+def home(request):
+    return render(request, 'core/home.html')
+
+@login_required
+def icalendar(request):
+    if request.method == 'POST':
+        # Get the iCalendar URL from the form submission
+        icalendar_url = request.POST.get('ical_url')
+
+        # Store the URL in session for later use
+        request.session['ical_url'] = icalendar_url
+
+        # Redirect to the /calendar page
+        return redirect('icalendar-add')
+    return render(request, 'parser/icalendar.html')
+
+@login_required
+def parser(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
@@ -71,16 +88,18 @@ def main(request):
     else:
         form = UploadFileForm()
 
-    return render(request, 'core/home.html', {'form': form})
+    return render(request, 'parser/parser.html', {'form': form})
 
 def registration(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
+            print("success")
             user = form.save()
             login(request, user)
             return redirect('home')  # Redirect to the home page after successful registration
     else:
         form = RegistrationForm()
+        print("error")
     return render(request, 'registration/registration.html', {'form': form})
 
