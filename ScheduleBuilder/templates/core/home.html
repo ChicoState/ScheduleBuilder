@@ -14,51 +14,38 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="" rel="stylesheet">
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'final.css' %}">
+     <link rel="stylesheet" href="{% static 'style.css' %}">
     <style>
-        #canvas-login-button {
-          background-color: #0077b5; /* Change the background color to match your design */
-          color: white;             /* Text color */
-          padding: 10px 20px;       /* Padding for better readability */
-          border: none;             /* Remove the default button border */
-          cursor: pointer;          /* Add a pointer cursor on hover */
+        .btn-outline-black {
+            border: 2px solid black;
+            color: black; 
         }
-        </style>
+    </style>
+    <title>Schedule Builder</title>
+
+</head>
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">Home</a>
+            <a class="navbar-brand" href="/" style="color: #49dfa3;">Home</a>
+            <a class="navbar-brand" href="/calendar" style="color: #49dfa3;">Calendar</a>
+            <a class="navbar-brand" href="https://canvas.csuchico.edu" style="color: #49dfa3;">Canvas</a>
+            <a class="navbar-brand" href="/parser" style="color: #49dfa3;">Manual Form Upload</a>
+            <a class="navbar-brand" href="/icalendar" style="color: #49dfa3;">Icalendar Upload</a>
             {% if user.is_authenticated %}
-                <a class="btn btn-danger" href="{% url 'logout' %}">Logout</a>
+                <a class="btn" style="background-color: #49dfa3; color: white;" href="{% url 'logout' %}">Logout</a>
             {% endif %}
             {% if user.is_staff %}
                 <a href="{% url 'admin:index' %}">Admin</a>
             {% endif %}
         </div>
-    </nav> 
+    </nav>    
     <div class="container mt-4 text-center">
-        <div style="text-align: center;">
+        <center>
             <h1>Schedule Builder</h1>
-        </div>
-        <a href="/calendar" class="btn btn-primary">Connect to Google Calendar</a>
-        <a href="/canvas" class="btn btn-primary">Login with Canvas</a>
-        <h2 class="mt-4">File Upload</h2>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-success">Upload File</button>
-        </form>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                var canvasLoginButton = document.getElementById("canvas-login-button");
-                canvasLoginButton.addEventListener("click", function(e) {
-                    e.preventDefault(); // Prevent the default behavior of the link
-                    window.location.href = "https://canvas.csuchico.edu/"; 
-                });
-            });
-        </script>
+        </center>
     </div>
     <!-- List View of Events -->
     <div class="container mt-4">
