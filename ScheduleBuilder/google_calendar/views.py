@@ -50,7 +50,6 @@ def icalendar(request):
                 else:
                     start = 'N/A'
                 results.append({'summary': event_name, 'class_name': class_name, 'start': start})
-    print(results)
     return render(request, 'parser/icalendar.html', {'results': results})
 
 # View for localhost/calendar/add/
@@ -101,9 +100,6 @@ def add(request):
         event_name = request.GET.get('event_name', '')
         class_name = request.GET.get('class_name', '')
         due_date = request.GET.get('due_date', '')
-        print("FORM")
-        print(event_name)
-        print(due_date)
         form_data = EventForm(initial={'event_name': event_name, 'class_name': class_name, 'due_date': due_date})
         context = {
             'form_data' : form_data
