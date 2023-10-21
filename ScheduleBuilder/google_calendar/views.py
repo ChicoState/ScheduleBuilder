@@ -8,6 +8,8 @@ import googleapiclient.discovery
 
 from icalendar import Calendar
 import requests
+from datetime import datetime
+import re
 
 # constants for connecting to google calendar API
 CAL_ID = config('CAL_ID')
@@ -15,53 +17,41 @@ SCOPES = ['https://www.googleapis.com/auth/calendar']
 SERVICE_ACCOUNT_FILE = './core/calendar-credentials.json'
 
 # view for localhost/calendar/
+
+
 def calendar(request):
-    # Your existing calendar view logic here
     results = []
     context = {"results": results}
     return render(request, 'calendar/calendar.html', context)
 
+
 def icalendar(request):
-    ical_url = request.session.get('ical_url')
-    ical_events = request.session.get('ical_events', [])
-    form = None
+    ical_url = request.session.get('ical_url') 
+    results = []
 
-    if ical_url and ical_events:
-        ical_event = ical_events[0]
-        initial_data = {
-            'event_name': ical_event['summary'],
-            'class_name': '',
-            'assigned_date': ical_event['start'],
-            'due_date': ical_event['end'],
-        }
-        form = EventForm(request.POST or None, initial=initial_data)
+    if ical_url:
+        # Fetch events from the iCalendar URL
+        response = requests.get(ical_url)
+        if response.status_code == 200:
+            cal = Calendar.from_ical(response.text)
+            for event in cal.walk('vevent'):
+                summary = event.get('summary')
+                split_result = summary.split('[')
+                event_name = split_result[0]
+                class_name = split_result[1]
+                pattern = r'\d{4}-(\w+-\d+)'
+                # Use the re.search function to find the pattern in the input string
+                match = re.search(pattern, class_name)
+                class_name = match.group(1)  # Extract the matched name part
 
-        if request.method == 'POST':
-            if 'add' in request.POST:
-                if form.is_valid():
-                    event = form.save(commit=False)
-                    event.save()
-                    ical_events.pop(0)
-
-                    if ical_events:
-                        next_ical_event = ical_events[0]
-                        initial_data = {
-                            'event_name': next_ical_event['summary'],
-                            'class_name': '',
-                            'assigned_date': next_ical_event['start'],
-                            'due_date': next_ical_event['end'],
-                        }
-                        form = EventForm(initial=initial_data)
-                    else:
-                        # All events are added, clear the session variable and redirect to the calendar
-                        request.session.pop('ical_events', None)
-                        return redirect('/calendar/')
-
-    context = {
-        "form_data": form
-    }
-
-    return render(request, 'calendar/add_assignment.html', context)
+                start = event.get('dtstart')
+                if start is not None:
+                    start = start.dt
+                else:
+                    start = 'N/A'
+                results.append({'summary': event_name, 'class_name': class_name, 'start': start})
+    print(results)
+    return render(request, 'parser/icalendar.html', {'results': results})
 
 # View for localhost/calendar/add/
 def add(request):
@@ -82,6 +72,7 @@ def add(request):
                 # CREATE A NEW EVENT IN CALENDAR
                 new_event = {
                 'summary': add_form.cleaned_data['event_name'],
+                'location': f'{add_form.cleaned_data["class_name"]}',
                 'description': event_description,
                 'start': {
                     'date': f'{start_date}',
@@ -92,8 +83,6 @@ def add(request):
                     'timeZone': 'America/Los_Angeles',
                 },
                 }
-                if add_form.cleaned_data['class_name']:
-                    new_event['location'] = f'{add_form.cleaned_data["class_name"]}'
                 # add event to calendar
                 service.events().insert(calendarId=CAL_ID, body=new_event).execute()
                 print('EVENT CREATED')
@@ -108,8 +97,15 @@ def add(request):
             # canceled
             return redirect('/calendar/')
     else:
+        # If it's not a POST request, retrieve data from GET parameters
+        event_name = request.GET.get('event_name', '')
+        class_name = request.GET.get('class_name', '')
+        due_date = request.GET.get('due_date', '')
+        print("FORM")
+        print(event_name)
+        print(due_date)
+        form_data = EventForm(initial={'event_name': event_name, 'class_name': class_name, 'due_date': due_date})
         context = {
-            'form_data' : EventForm()
+            'form_data' : form_data
         }
         return render(request, 'calendar/add_assignment.html', context)
-    

@@ -10,8 +10,26 @@ class EventForm(forms.ModelForm):
     event_name = forms.CharField(widget=forms.TextInput(attrs={'size': '80'}), required=True)
     class_name = forms.CharField(widget=forms.TextInput(attrs={'size': '80'}), required=False)
     # submission_type = forms.ModelChoiceField(queryset=SubmitType.objects.all(), blank=True)
-    start_date = forms.DateField(input_formats=DATE_INPUT_FORMATS, required=True)
-    due_date = forms.DateField(input_formats=DATE_INPUT_FORMATS, required=True)
+    start_date = forms.DateField(
+        input_formats=DATE_INPUT_FORMATS,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'YYYY-MM-DD', 
+                'size': '80'
+            }
+        )
+    )
+    due_date = forms.DateField(
+        input_formats=DATE_INPUT_FORMATS,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'YYYY-MM-DD',  
+                'size': '80'
+            }
+        )
+    )
     time_to_spend = forms.IntegerField(widget=forms.TextInput(attrs={'size': '80'}), required=True)
     amount_per_week = forms.IntegerField(widget=forms.TextInput(attrs={'size': '80'}), required=True)
     priority = forms.ChoiceField(choices=[('low', 'Low'), ('medium', 'Medium'), ('high', 'High')],

@@ -21,14 +21,15 @@
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">Home</a>
+            <a class="navbar-brand" href="/" style="color: #49dfa3;">Home</a>
+            <a class="navbar-brand" href="/calendar" style="color: #49dfa3;">Calendar</a>
+            <a class="navbar-brand" href="https://canvas.csuchico.edu" style="color: #49dfa3;">Canvas</a>
+            <a class="navbar-brand" href="/parser" style="color: #49dfa3;">Manual Form Upload</a>
+            <a class="navbar-brand" href="/icalendar" style="color: #49dfa3;">Icalendar Upload</a>
             {% if user.is_authenticated %}
-            <a class="btn btn-danger" href="{% url 'logout' %}">Logout</a>
-            {% endif %}
-            {% if user.is_staff %}
-            <a href="{% url 'admin:index' %}">Admin</a>
+                <a class="btn" style="background-color: #49dfa3; color: white;" href="{% url 'logout' %}">Logout</a>
             {% endif %}
         </div>
     </nav>
@@ -37,13 +38,30 @@
             <h1>Schedule Builder</h1>
         </center>
         <h2 class="mt-4">Link Upload</h2>
-        <form method="post" action="{% url 'icalendar' %}">
+        <form method="post" action="{% url 'icalendar-add' %}">
             {% csrf_token %}
             <label for="ical_url">iCalendar URL:</label>
             <input type="text" id="ical_url" name="ical_url">
             <input type="submit" value="Submit">
         </form>
     </div>
+    <ul>
+        {% for event in results %}
+        {% if event %}
+        <li>
+            {{ event.summary }} - {{event.class_name}} - {{ event.start }}
+            <a href="{% url 'calendar-add' %}?event_name={{ event.summary }}&class_name={{event.class_name}}&due_date={{ event.start|date:'Y-m-d' }}">Edit</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+    <form method="post">
+        {% csrf_token %}
+        {% for form in event_forms %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+        {% endfor %}
+    </form>
     <!-- List View of Events -->
     <div class="container mt-4">
 
@@ -54,4 +72,3 @@
 </body>
 
 </html>
-
