@@ -1,12 +1,13 @@
 # core/views.py
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from .forms import UploadFileForm
 from PyPDF2 import PdfReader
-import os
-import tempfile
 from .assignment_parser import assignment_parser
 from .ScheduleParser import parse_keywords, parse_tables, parse_schedule, extract_grade_breakdown
+import os
+import tempfile
 import pdfplumber
 import re
 import pandas as pd
@@ -66,3 +67,6 @@ def main(request):
         form = UploadFileForm()
 
     return render(request, 'core/home.html', {'form': form})
+
+def user_login(request):
+    return HttpResponse("Login Page")

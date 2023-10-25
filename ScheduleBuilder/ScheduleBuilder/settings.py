@@ -46,6 +46,7 @@ DATE_INPUT_FORMATS = ['%Y-%m-%d','%m/%d/%Y','%m/%d/%y']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
+    'django.contrib.sites',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -57,6 +58,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'core',
     'google_calendar',
+    
     
 ]
 

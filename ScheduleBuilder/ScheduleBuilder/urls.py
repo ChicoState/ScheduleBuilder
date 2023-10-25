@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
-from django.contrib.auth.views import LogoutView
+from django.contrib.auth.views import LogoutView, LoginView
 from core import views as core_views
 from google_calendar import views as cal_views
 urlpatterns = [
@@ -27,5 +27,5 @@ urlpatterns = [
     path('calendar/add_assignment/',cal_views.add, name='calendar-add'),
     path('accounts/', include('allauth.urls')),
     path('logout/', LogoutView.as_view()),
-    
+    path('login/', LoginView.as_view())
 ]
