@@ -27,8 +27,7 @@ def calendar(request):
 
 
 def icalendar(request):
-    ical_url = request.POST.get('ical_url')
-    print(ical_url)
+    ical_url = request.POST.get('ical_url') 
     results = []
 
     if ical_url:
@@ -142,7 +141,6 @@ def add(request):
             'form_data': form_data
         }
         return render(request, 'calendar/add_assignment.html', context)
-
 
 def get_recurrence_rule(option, start_date, due_date):
     # Define a mapping of recurrence options to recurrence rules
