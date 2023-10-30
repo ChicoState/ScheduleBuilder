@@ -1,12 +1,22 @@
 body {
-    background-image: url('background.jpg');
+    cursor: url('cursor.png');  
+        
+    /*background-image: url('background.jpg');*/
+    
+    background-color: rgb(0, 0, 0); 
     background-size: cover;
     background-repeat: no-repeat; 
     /*background-position: center center;*/
 }
 
+p {
+    color: white;
+  }
+  
 .bgtable {
-    background-image: url('background.jpg');
+    cursor: url('cursor.png'); 
+    /*background-image: url('background.jpg'); */
+    background-color: black; 
     background-size: cover;
     background-repeat: no-repeat; 
 }

@@ -20,8 +20,14 @@
             border: 2px solid black;
             color: black; 
         }
+        body {
+            cursor: url('/static/cursor.png'), auto;
+        }
+        .progress-bar {
+            width: 100%; /* Set a default width */
+        }
     </style>
-    <title>Schedule Builder</title>
+    <title style="color: white;">Schedule Builder</title>
 
 </head>
 
@@ -44,8 +50,48 @@
     </nav>    
     <div class="container mt-4 text-center">
         <center>
-            <h1>Schedule Builder</h1>
+            <h1 style="color: white;">Schedule Builder</h1>
         </center>
+            <h1 style="color: white;">Assignment Progress</h1>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: {{ overall_progress }}%; background-color: #49dfa3;" aria-valuenow="{{ overall_progress }}" aria-valuemin="0" aria-valuemax="100">
+                    <span style="color: black;">{{ overall_progress }}%</span>
+                </div>
+            </div>
+            <h2 style="color: white;">Assignment List</h2>
+            <ul>
+                <li><strong style="color: white;">Not Started</strong></li>
+                <ul>
+                    {% if not_started_assignments %}
+                        {% for event in not_started_assignments %}
+                            <li style="color: white;">{{ event }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li style="color: white;">0</li>
+                    {% endif %}
+                </ul>
+                <li><strong style="color: white;">In Progress</strong></li>
+                <ul>
+                    {% if in_progress_assignments %}
+                        {% for event in in_progress_assignments %}
+                            <li style="color: white;">{{ event }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li style="color: white;">0</li>
+                    {% endif %}
+                </ul>
+                <li><strong style="color: white;">Completed</strong></li>
+                <ul>
+                    {% if completed_assignments %}
+                        {% for event in completed_assignments %}
+                            <li style="color: white;">{{ event }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li style="color: white;">0</li>
+                    {% endif %}
+                </ul>
+            </ul>
+        
     </div>
     <!-- List View of Events -->
     <div class="container mt-4">

@@ -15,7 +15,7 @@
     <link href="" rel="stylesheet">
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'style.css' %}">
-    <title>Schedule Builder</title>
+    <title style="color: white;">Schedule Builder</title>
 
 </head>
 
@@ -34,23 +34,23 @@
         </div>
     </nav>
     <div class="container mt-4 text-center">
-        <center>
-            <h1>Schedule Builder</h1>
-        </center>
-        <h2 class="mt-4">Link Upload</h2>
-        <form method="post" action="{% url 'icalendar-add' %}">
+        <h1 style="color: white;">Schedule Builder</h1>
+        <h2 class="mt-4" style="color: white;">Link Upload</h2>
+        <form method="post" action="{% url 'icalendar-add' %}" class="mt-4">
             {% csrf_token %}
-            <label for="ical_url">iCalendar URL:</label>
-            <input type="text" id="ical_url" name="ical_url">
-            <input type="submit" value="Submit">
+            <div class="form-group">
+                <label for="ical_url" style="color: white;">iCalendar URL:</label>
+                <input type="text" id="ical_url" name="ical_url" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary" style="background-color: #49dfa3; color: white;">Submit</button>
         </form>
-    </div>
+    </div>    
     <ul>
         {% for event in results %}
         {% if event %}
         <li>
-            {{ event.summary }} - {{event.class_name}} - {{ event.start }}
-            <a href="{% url 'calendar-add' %}?event_name={{ event.summary }}&class_name={{event.class_name}}&due_date={{ event.start|date:'Y-m-d' }}">Edit</a>
+            <span style="color: white;">{{ event.summary }} - {{ event.class_name }} - {{ event.start }}</span>
+            <a href="{% url 'calendar-add' %}?event_name={{ event.summary }}&class_name={{event.class_name}}&due_date={{ event.start|date:'Y-m-d' }}" style="color: #49dfa3;">Edit</a>
         </li>
         {% endif %}
         {% endfor %}

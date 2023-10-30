@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upcoming Assignments</title>
+    <title style="color: white;">Upcoming Assignments</title>
     {% load static %}
     
     {% include 'bootstrap.html' %}
@@ -27,8 +27,8 @@
     </nav>
 
     <div class="container mt-4 text-center">
-        <h1>Upcoming Assignments</h1>
-        <a href="add_assignment/" class="btn btn-primary">Add Assignment</a>
+        <h1 style="color: white;">Upcoming Assignments</h1>
+        <a href="add_assignment/" class="btn btn-primary" style="background-color: #49dfa3; color: white;">Add Assignment</a>
         <ul class="list-group mt-3">
             {% comment %} Will print the list of events in a human-readable format next sprint {% endcomment %}
             {% for result in results %}
