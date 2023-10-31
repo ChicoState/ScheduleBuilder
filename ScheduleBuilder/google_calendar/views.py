@@ -105,8 +105,8 @@ def add(request):
                     },
                 }
 
-                #if recurrence_rule:
-                    #new_event['recurrence'] = [f'RRULE:{recurrence_rule}']
+                if recurrence_rule:
+                    new_event['recurrence'] = [f'RRULE:{recurrence_rule}']
                 print(new_event)
                 # Add the event to the calendar
                 try:
