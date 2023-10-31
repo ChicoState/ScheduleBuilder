@@ -132,12 +132,10 @@ def registration(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            print("success")
             user = form.save()
             login(request, user)
             return redirect('home')  # Redirect to the home page after successful registration
     else:
         form = RegistrationForm()
-        print("error")
     return render(request, 'registration/registration.html', {'form': form})
 

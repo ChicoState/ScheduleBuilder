@@ -27,8 +27,7 @@ def calendar(request):
 
 
 def icalendar(request):
-    ical_url = request.POST.get('ical_url')
-    print(ical_url)
+    ical_url = request.POST.get('ical_url') 
     results = []
 
     if ical_url:
