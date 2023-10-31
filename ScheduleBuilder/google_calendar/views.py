@@ -106,8 +106,8 @@ def add(request):
                     },
                 }
 
-                if recurrence_rule:
-                    new_event['recurrence'] = [f'RRULE:{recurrence_rule}']
+                #if recurrence_rule:
+                    #new_event['recurrence'] = [f'RRULE:{recurrence_rule}']
                 print(new_event)
                 # Add the event to the calendar
                 try:
@@ -144,7 +144,7 @@ def add(request):
         return render(request, 'calendar/add_assignment.html', context)
 
 
-def get_recurrence_rule(option, start_date, due_date):
+def get_recurrence_rule(option, due_date):
     # Define a mapping of recurrence options to recurrence rules
     due_date_iso = datetime.strptime(due_date, '%Y-%m-%d').isoformat() + 'Z' 
     recurrence_rules = {

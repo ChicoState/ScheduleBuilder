@@ -9,11 +9,20 @@ from .assignment_parser import assignment_parser
 from .ScheduleParser import parse_keywords, parse_tables, parse_schedule, extract_grade_breakdown
 import pdfplumber
 import re
-import pandas as pd
+#import pandas as pd
 from django.contrib.auth.views import LoginView
 from .forms import RegistrationForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from decouple import config
+from google.oauth2 import service_account
+import googleapiclient.discovery
+from datetime import datetime
+
+# constants for connecting to google calendar API
+CAL_ID = config('CAL_ID')
+SCOPES = ['https://www.googleapis.com/auth/calendar']
+SERVICE_ACCOUNT_FILE = './core/calendar-credentials.json'
 
 @login_required
 def extract_text_from_pdf(pdf_file):
@@ -28,20 +37,49 @@ def extract_text_from_pdf(pdf_file):
 
 @login_required
 def home(request):
-    return render(request, 'core/home.html')
+    # Credentials to connect to google cloud API and service account to add events to calendar
+    credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    service = googleapiclient.discovery.build('calendar', 'v3', credentials=credentials)
+    # Define parameters to fetch upcoming events
+    calendar_id = CAL_ID  # Replace with your calendar ID
+    now = datetime.utcnow()
+    events_result = service.events().list(
+    calendarId=calendar_id,
+    timeMin=now.isoformat() + 'Z',  # Filter events that start from now or later
+    maxResults=10,  # Maximum number of events to retrieve
+    singleEvents=True,
+    orderBy='startTime'
+    ).execute()
 
-@login_required
-def icalendar(request):
-    if request.method == 'POST':
-        # Get the iCalendar URL from the form submission
-        icalendar_url = request.POST.get('ical_url')
-
-        # Store the URL in session for later use
-        request.session['ical_url'] = icalendar_url
-
-        # Redirect to the /calendar page
-        return redirect('icalendar-add')
-    return render(request, 'parser/icalendar.html')
+    events = events_result.get('items', [])
+    print(events)
+    not_started_assignments = []
+    in_progress_assignments = []
+    completed_assignments = []
+    for event in events:
+        description = event.get('description', '')
+        print(description)
+        if "Progress: not started" in description:
+            not_started_assignments.append(event.get('summary', ''))
+        elif "Progress: in progress" in description:
+            in_progress_assignments.append(event.get('summary', ''))
+        elif "Progress: completed" in description:
+            completed_assignments.append(event.get('summary', ''))
+    # Calculate the overall progress, considering both "in progress" and "completed"
+    total_assignments = len(events)
+    in_progress_count = len(in_progress_assignments)
+    completed_count = len(completed_assignments)
+    # Calculate the overall progress, considering "in progress" for half the percentage
+    if total_assignments > 0:
+        overall_progress = ((completed_count + (in_progress_count / 2)) / total_assignments) * 100
+    else:
+        overall_progress = 100  # Set overall progress to 100% if there are no assignments
+    print(overall_progress)
+    return render(request, 'core/home.html', {
+        'overall_progress': overall_progress,
+        'not_started_assignments': not_started_assignments,
+        'in_progress_assignments': in_progress_assignments,
+        'completed_assignments': completed_assignments })
 
 @login_required
 def parser(request):

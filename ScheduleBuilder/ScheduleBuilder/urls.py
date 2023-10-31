@@ -31,5 +31,4 @@ urlpatterns = [
     path('register/', core_views.registration, name='register'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('parser/', core_views.parser, name='parser'),
-    path('icalendar/', core_views.icalendar, name='icalendar')
 ]
