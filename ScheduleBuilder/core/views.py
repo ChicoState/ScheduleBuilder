@@ -56,30 +56,36 @@ def home(request):
     not_started_assignments = []
     in_progress_assignments = []
     completed_assignments = []
+    today_event_titles = []  # Initialize list for today's event titles
     for event in events:
+        print (event)
         description = event.get('description', '')
-        print(description)
+        due_date = event.get('end', '')
+        if due_date:
+            print(due_date['date'])
+            print(datetime.now().date())
+            if due_date['date'] == datetime.now().date():
+                today_event_titles.append(event.get('summary', ''))
         if "Progress: not started" in description:
             not_started_assignments.append(event.get('summary', ''))
         elif "Progress: in progress" in description:
             in_progress_assignments.append(event.get('summary', ''))
         elif "Progress: completed" in description:
             completed_assignments.append(event.get('summary', ''))
-    # Calculate the overall progress, considering both "in progress" and "completed"
+
+         # Calculate the overall progress for assignments
     total_assignments = len(events)
     in_progress_count = len(in_progress_assignments)
     completed_count = len(completed_assignments)
-    # Calculate the overall progress, considering "in progress" for half the percentage
-    if total_assignments > 0:
-        overall_progress = ((completed_count + (in_progress_count / 2)) / total_assignments) * 100
-    else:
-        overall_progress = 100  # Set overall progress to 100% if there are no assignments
-    print(overall_progress)
+    overall_progress = ((completed_count + (in_progress_count / 2)) / total_assignments) if total_assignments > 0 else 1.0
+
+    
     return render(request, 'core/home.html', {
         'overall_progress': overall_progress,
         'not_started_assignments': not_started_assignments,
         'in_progress_assignments': in_progress_assignments,
-        'completed_assignments': completed_assignments })
+        'completed_assignments': completed_assignments,
+        'today_event_titles': today_event_titles })
 
 @login_required
 def parser(request):

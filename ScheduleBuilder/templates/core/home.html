@@ -91,6 +91,15 @@
                     {% endif %}
                 </ul>
             </ul>
+            <h3 style="color: white;">To Do Today List</h3>
+            <ul>
+                {% for title in today_event_titles %}
+                    <li style="color: white;">{{ title }}</li>
+                {% empty %}
+                    <li style="color: white;">No events due today</li>
+                {% endfor %}
+            </ul>
+
         
     </div>
     <!-- List View of Events -->

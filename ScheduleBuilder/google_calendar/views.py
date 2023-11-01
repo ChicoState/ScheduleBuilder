@@ -61,7 +61,7 @@ def icalendar(request):
 
 # View for localhost/calendar/add/
 
-
+'''
 def add(request):
     # Credentials to connect to google cloud API and service account to add events to calendar
     credentials = service_account.Credentials.from_service_account_file(
@@ -142,10 +142,11 @@ def add(request):
         }
         return render(request, 'calendar/add_assignment.html', context)
 
-
+'''
 def get_recurrence_rule(option, due_date):
     # Define a mapping of recurrence options to recurrence rules
-    due_date_iso = datetime.strptime(due_date, '%Y-%m-%d').isoformat() + 'Z' 
+    due_date_datetime = datetime.strptime(due_date, '%Y-%m-%d')
+    due_date_iso = due_date_datetime.strftime('%Y%m%dT%H%M%SZ')
     recurrence_rules = {
         'weekly': f'FREQ=WEEKLY;UNTIL={due_date_iso}',
         'daily': f'FREQ=DAILY;UNTIL={due_date_iso}',
@@ -155,3 +156,69 @@ def get_recurrence_rule(option, due_date):
 
     recurrence_rule = recurrence_rules.get(option, '')
     return recurrence_rule
+
+
+# View for localhost/calendar/add/
+def add(request):
+    # Credentials to connect to google cloud API and service account to add events to calendar
+    credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    service = googleapiclient.discovery.build('calendar', 'v3', credentials=credentials)
+    if request.method == 'POST':
+        if 'add' in request.POST:
+            # form to add event
+            add_form = EventForm(request.POST)
+            if add_form.is_valid():
+                event = add_form.save(commit=False)
+                event.save()
+                # need to convert dates into ISO format for calendar events
+                start_date = add_form.cleaned_data['start_date'].isoformat()
+                due_date = add_form.cleaned_data['due_date'].isoformat()
+                # Get the recurrence option from the form
+                recurrence_option = add_form.cleaned_data.get('repeat')
+                recurrence_rule = None
+
+                if recurrence_option:
+                    recurrence_rule = get_recurrence_rule(recurrence_option, due_date)
+                event_description = f'Priority: {event.priority}\nProgress: {event.progress}\nTime to Spend: {event.time_to_spend}\nAmount per Week: {event.amount_per_week}'
+                # CREATE A NEW EVENT IN CALENDAR
+                new_event = {
+                'summary': add_form.cleaned_data['event_name'],
+                'location': f'{add_form.cleaned_data["class_name"]}',
+                'description': event_description,
+                'start': {
+                    'date': f'{start_date}',
+                    'timeZone': 'America/Los_Angeles',
+                },
+                'end': {
+                    'date': f"{due_date}",
+                    'timeZone': 'America/Los_Angeles',
+                },
+                }
+                if recurrence_rule:
+                    new_event['recurrence'] = [f'RRULE:{recurrence_rule}']
+                    new_event['end']['date'] = f'{start_date}'
+
+                print(new_event)
+                # add event to calendar
+                service.events().insert(calendarId=CAL_ID, body=new_event).execute()
+                print('EVENT CREATED')
+                return redirect('/calendar/')
+            # if add form isnt valid
+            else:
+                context = {
+                    'form_data': add_form
+                }
+                return render(request, 'calendar/add_assignment.html', context)
+        else: 
+            # canceled
+            return redirect('/calendar/')
+    else:
+        # If it's not a POST request, retrieve data from GET parameters
+        event_name = request.GET.get('event_name', '')
+        class_name = request.GET.get('class_name', '')
+        due_date = request.GET.get('due_date', '')
+        form_data = EventForm(initial={'event_name': event_name, 'class_name': class_name, 'due_date': due_date})
+        context = {
+            'form_data' : form_data
+        }
+        return render(request, 'calendar/add_assignment.html', context)
