@@ -23,9 +23,14 @@ from google_calendar import views as cal_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', core_views.main, name='home'),
+    # path()
     path('calendar/', cal_views.main, name='calendar'),
+    path('calendar/create_calendar/', cal_views.create_calendar, name='create calendar'),
     path('calendar/add_assignment/',cal_views.add, name='calendar-add'),
     path('accounts/', include('allauth.urls')),
     path('logout/', LogoutView.as_view()),
-    path('login/', LoginView.as_view())
+    path('login/', core_views.user_login, name='login'),
+    path("dj-rest-auth/google/login/", core_views.GoogleLoginView.as_view()),
+    path("~redirect/", view=core_views.UserRedirectView.as_view(), name="redirect")
 ]
+# template_name='google-auth/test.html'

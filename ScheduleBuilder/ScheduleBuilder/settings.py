@@ -19,10 +19,20 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 
 # add a site ID and redirect users to the base route after a successful login or logout.
-SITE_ID = 2
+SITE_ID = 3
+
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+SOCIALACCOUNT_QUERY_EMAIL = True
+# ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_REQUIRED = True
+
+ACCOUNT_EMAIL_VERIFICATION = "none"
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '****.apps.googleusercontent.com' 
 
 env = environ.Env()
 environ.Env.read_env()
@@ -43,6 +53,7 @@ ALLOWED_HOSTS = ['*']
 DATE_INPUT_FORMATS = ['%Y-%m-%d','%m/%d/%Y','%m/%d/%y']
 
 # Application definition
+# TOKEN_MODEL = None
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -56,14 +67,23 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'dj_rest_auth',
+    'rest_framework',
+    # 'rest_framework.authtoken',
     'core',
     'google_calendar',
-    
-    
 ]
+
+# django.core.exceptions.ImproperlyConfigured: You must include `rest_framework.authtoken` in INSTALLED_APPS or set TOKEN_MODEL to None
+CSRF_TRUSTED_ORIGINS = ['https://*.127.0.0.1']
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
+        "APP": {
+        "client_id": '422693304298-80725tckdieu1afmni4foblp8561spsf.apps.googleusercontent.com',
+        "secret": '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',
+        "key": ""
+        },
         'SCOPE': [
             'profile',
             'email',
@@ -164,3 +184,39 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend'
 ]
+
+REST_AUTH = {
+    'LOGIN_SERIALIZER': 'dj_rest_auth.serializers.LoginSerializer',
+    'TOKEN_SERIALIZER': 'dj_rest_auth.serializers.TokenSerializer',
+    'JWT_SERIALIZER': 'dj_rest_auth.serializers.JWTSerializer',
+    'JWT_SERIALIZER_WITH_EXPIRATION': 'dj_rest_auth.serializers.JWTSerializerWithExpiration',
+    'JWT_TOKEN_CLAIMS_SERIALIZER': 'rest_framework_simplejwt.serializers.TokenObtainPairSerializer',
+    'USER_DETAILS_SERIALIZER': 'dj_rest_auth.serializers.UserDetailsSerializer',
+    'PASSWORD_RESET_SERIALIZER': 'dj_rest_auth.serializers.PasswordResetSerializer',
+    'PASSWORD_RESET_CONFIRM_SERIALIZER': 'dj_rest_auth.serializers.PasswordResetConfirmSerializer',
+    'PASSWORD_CHANGE_SERIALIZER': 'dj_rest_auth.serializers.PasswordChangeSerializer',
+
+    'REGISTER_SERIALIZER': 'dj_rest_auth.registration.serializers.RegisterSerializer',
+
+    'REGISTER_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
+
+    'TOKEN_MODEL': None,
+    # 'TOKEN_MODEL': 'rest_framework.authtoken.models.Token',
+    'TOKEN_CREATOR': 'dj_rest_auth.utils.default_create_token',
+
+    'PASSWORD_RESET_USE_SITES_DOMAIN': False,
+    'OLD_PASSWORD_FIELD_ENABLED': False,
+    'LOGOUT_ON_PASSWORD_CHANGE': False,
+    'SESSION_LOGIN': True,
+    'USE_JWT': False,
+
+    'JWT_AUTH_COOKIE': None,
+    'JWT_AUTH_REFRESH_COOKIE': None,
+    'JWT_AUTH_REFRESH_COOKIE_PATH': '/',
+    'JWT_AUTH_SECURE': False,
+    'JWT_AUTH_HTTPONLY': True,
+    'JWT_AUTH_SAMESITE': 'Lax',
+    'JWT_AUTH_RETURN_EXPIRATION': False,
+    'JWT_AUTH_COOKIE_USE_CSRF': False,
+    'JWT_AUTH_COOKIE_ENFORCE_CSRF_ON_UNAUTHENTICATED': False,
+}
