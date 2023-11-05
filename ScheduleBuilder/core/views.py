@@ -50,21 +50,20 @@ def home(request):
     singleEvents=True,
     orderBy='startTime'
     ).execute()
-
     events = events_result.get('items', [])
-    print(events)
     not_started_assignments = []
     in_progress_assignments = []
     completed_assignments = []
     today_event_titles = []  # Initialize list for today's event titles
     for event in events:
-        print (event)
         description = event.get('description', '')
         due_date = event.get('end', '')
         if due_date:
-            print(due_date['date'])
-            print(datetime.now().date())
-            if due_date['date'] == datetime.now().date():
+            due_date_string = due_date['date']
+            due_date_date = datetime.strptime(due_date_string, '%Y-%m-%d')
+            current_date = datetime.now().date()
+
+            if due_date_date.date() == current_date:
                 today_event_titles.append(event.get('summary', ''))
         if "Progress: not started" in description:
             not_started_assignments.append(event.get('summary', ''))
@@ -79,7 +78,6 @@ def home(request):
     completed_count = len(completed_assignments)
     overall_progress = ((completed_count + (in_progress_count / 2)) / total_assignments) if total_assignments > 0 else 1.0
 
-    
     return render(request, 'core/home.html', {
         'overall_progress': overall_progress,
         'not_started_assignments': not_started_assignments,

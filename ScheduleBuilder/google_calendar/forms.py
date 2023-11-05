@@ -50,8 +50,18 @@ class EventForm(forms.ModelForm):
         choices=RECURRING_OPTIONS,
         required=False
     )
+    repeat_until = forms.DateField(
+        input_formats=DATE_INPUT_FORMATS,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'YYYY-MM-DD',  
+                'size': '80'
+            }
+        )
+    )
     
     class Meta():
         model = Event
         # fields = ('assignment_name' , 'class_name', 'submission_type', 'assigned_date', 'due_date')
-        fields = ('event_name' , 'class_name', 'start_date', 'due_date', 'time_to_spend', 'priority', 'progress', 'repeat' )
+        fields = ('event_name' , 'class_name', 'start_date', 'due_date', 'time_to_spend', 'priority', 'progress', 'repeat', 'repeat_until' )

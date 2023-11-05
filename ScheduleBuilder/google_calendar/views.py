@@ -33,13 +33,9 @@ def icalendar(request):
     if ical_url:
         # Fetch events from the iCalendar URL
         response = requests.get(ical_url)
-        print("RESPONSE")
-        print(response)
         if response.status_code == 200:
             cal = Calendar.from_ical(response.text)
-            print(cal)
             for event in cal.walk('vevent'):
-                print(event)
                 summary = event.get('summary')
                 split_result = summary.split('[')
                 event_name = split_result[0]
@@ -56,93 +52,8 @@ def icalendar(request):
                     start = 'N/A'
                 results.append(
                     {'summary': event_name, 'class_name': class_name, 'start': start})
-    print(results)
     return render(request, 'parser/icalendar.html', {'results': results})
 
-# View for localhost/calendar/add/
-
-'''
-def add(request):
-    # Credentials to connect to google cloud API and service account to add events to calendar
-    credentials = service_account.Credentials.from_service_account_file(
-        SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-    service = googleapiclient.discovery.build(
-        'calendar', 'v3', credentials=credentials)
-    if request.method == 'POST':
-        if 'add' in request.POST:
-            # form to add event
-            add_form = EventForm(request.POST)
-            if add_form.is_valid():
-                event = add_form.save(commit=False)
-                event.save()
-
-                # Convert dates into ISO format for calendar events
-                start_date = add_form.cleaned_data['start_date'].isoformat()
-                due_date = add_form.cleaned_data['due_date'].isoformat()
-
-                # Get the recurrence option from the form
-                recurrence_option = add_form.cleaned_data.get('repeat')
-                recurrence_rule = None
-
-                if recurrence_option:
-                    recurrence_rule = get_recurrence_rule(
-                        recurrence_option, start_date, due_date)
-
-                event_description = f'Priority: {event.priority}\nProgress: {event.progress}\nTime to Spend: {event.time_to_spend}\nAmount per Week: {event.amount_per_week}'
-
-                # CREATE A NEW EVENT IN CALENDAR
-                new_event = {
-                    'summary': add_form.cleaned_data['event_name'],
-                    'location': f'{add_form.cleaned_data["class_name"]}',
-                    'description': event_description,
-                    'start': {
-                        'dateTime': start_date,
-                        'timeZone': 'America/Los_Angeles',
-                    },
-                    'end': {
-                        'dateTime': due_date,
-                        'timeZone': 'America/Los_Angeles',
-                    },
-                }
-
-                if recurrence_rule:
-                    new_event['recurrence'] = [f'RRULE:{recurrence_rule}']
-                print(new_event)
-                # Add the event to the calendar
-                try:
-                # Try to create the new event in the calendar
-                    response = service.events().insert(calendarId=CAL_ID, body=new_event).execute()
-                    print('Event created successfully:', response)
-                except HttpError as e:
-                    print('Error creating event:', e)
-                    print('EVENT CREATED')
-                return redirect('/calendar/')
-
-            # if add form isnt valid
-            else:
-                context = {
-                    'form_data': add_form
-                }
-                return render(request, 'calendar/add_assignment.html', context)
-        else:
-            # canceled
-            return redirect('/calendar/')
-    else:
-        # If it's not a POST request, retrieve data from GET parameters
-        event_name = request.GET.get('event_name', '')
-        class_name = request.GET.get('class_name', '')
-        due_date = request.GET.get('due_date', '')
-        print("FORM")
-        print(event_name)
-        print(due_date)
-        form_data = EventForm(
-            initial={'event_name': event_name, 'class_name': class_name, 'due_date': due_date})
-        context = {
-            'form_data': form_data
-        }
-        return render(request, 'calendar/add_assignment.html', context)
-
-'''
 def get_recurrence_rule(option, due_date):
     # Define a mapping of recurrence options to recurrence rules
     due_date_datetime = datetime.strptime(due_date, '%Y-%m-%d')
@@ -175,10 +86,13 @@ def add(request):
                 due_date = add_form.cleaned_data['due_date'].isoformat()
                 # Get the recurrence option from the form
                 recurrence_option = add_form.cleaned_data.get('repeat')
+                recurrence_date = add_form.cleaned_data.get('repeat_until')
+                if recurrence_date:
+                    recurrence_date = recurrence_date.isoformat()
                 recurrence_rule = None
 
                 if recurrence_option:
-                    recurrence_rule = get_recurrence_rule(recurrence_option, due_date)
+                    recurrence_rule = get_recurrence_rule(recurrence_option, recurrence_date)
                 event_description = f'Priority: {event.priority}\nProgress: {event.progress}\nTime to Spend: {event.time_to_spend}\nAmount per Week: {event.amount_per_week}'
                 # CREATE A NEW EVENT IN CALENDAR
                 new_event = {
@@ -196,9 +110,7 @@ def add(request):
                 }
                 if recurrence_rule:
                     new_event['recurrence'] = [f'RRULE:{recurrence_rule}']
-                    new_event['end']['date'] = f'{start_date}'
 
-                print(new_event)
                 # add event to calendar
                 service.events().insert(calendarId=CAL_ID, body=new_event).execute()
                 print('EVENT CREATED')
@@ -222,3 +134,40 @@ def add(request):
             'form_data' : form_data
         }
         return render(request, 'calendar/add_assignment.html', context)
+    
+def delete(request):
+    event_title = request.GET.get('event_title')
+    due_date = request.GET.get('due_date')
+    due_date = datetime.strptime(due_date, '%Y-%m-%d')
+    start_date = request.GET.get('start_date')
+    start_date = datetime.strptime(start_date, '%Y-%m-%d')
+    credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    service = googleapiclient.discovery.build('calendar', 'v3', credentials=credentials)
+    if request.method == 'GET':
+        if 'event_title' in request.GET:
+            calendar_id = CAL_ID  # Replace with your calendar ID
+            now = datetime.utcnow()
+            events_result = service.events().list(
+            calendarId=calendar_id,
+            timeMin=now.isoformat() + 'Z',  # Filter events that start from now or later
+            maxResults=10,  # Maximum number of events to retrieve
+            singleEvents=True,
+            orderBy='startTime'
+            ).execute()
+            events = events_result.get('items', [])
+            for event in events:
+                due_date_var = event.get('end', '')
+                if due_date_var:
+                    due_date_string = due_date_var['date']
+                    due_date_date = datetime.strptime(due_date_string, '%Y-%m-%d')
+                start_date_var = event.get('start', '')
+                if start_date_var:
+                    start_date_string = start_date_var['date']
+                    start_date_date = datetime.strptime(start_date_string, '%Y-%m-%d')
+                if event.get('summary', '') == event_title:
+                    if due_date_date.date() == due_date.date() and start_date_date.date() == start_date.date():
+                        print("EVENT DELETED")
+                        event_id = event.get('id', '')
+                        service.events().delete(calendarId=CAL_ID, eventId=event_id).execute()
+    context = {}
+    return render(request, 'calendar/calendar.html', context)
