@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from google_calendar.forms import EventForm, SubmitType
+from google_calendar.forms import EditEventForm, DeleteEventForm, EventForm, SubmitType
 
 from decouple import config
 from google.oauth2 import service_account
@@ -138,9 +138,9 @@ def add(request):
 def delete(request):
     event_title = request.GET.get('event_title')
     due_date = request.GET.get('due_date')
-    due_date = datetime.strptime(due_date, '%Y-%m-%d')
+    #due_date = datetime.strptime(due_date, '%Y-%m-%d')
     start_date = request.GET.get('start_date')
-    start_date = datetime.strptime(start_date, '%Y-%m-%d')
+    #start_date = datetime.strptime(start_date, '%Y-%m-%d')
     credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
     service = googleapiclient.discovery.build('calendar', 'v3', credentials=credentials)
     if request.method == 'GET':
@@ -165,9 +165,62 @@ def delete(request):
                     start_date_string = start_date_var['date']
                     start_date_date = datetime.strptime(start_date_string, '%Y-%m-%d')
                 if event.get('summary', '') == event_title:
-                    if due_date_date.date() == due_date.date() and start_date_date.date() == start_date.date():
+                    if due_date_date.date() == due_date_date.date() and start_date_date.date() == start_date_date.date():
                         print("EVENT DELETED")
                         event_id = event.get('id', '')
                         service.events().delete(calendarId=CAL_ID, eventId=event_id).execute()
     context = {}
-    return render(request, 'calendar/calendar.html', context)
+    return render(request, 'calendar/delete_assignment.html', context)
+
+def edit_event(request):
+    event_title = request.GET.get('event_title')
+    due_date = request.GET.get('due_date')
+    #due_date = datetime.strptime(due_date, '%Y-%m-%d')
+    start_date = request.GET.get('start_date')
+    #start_date = datetime.strptime(start_date, '%Y-%m-%d')
+    credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    service = googleapiclient.discovery.build('calendar', 'v3', credentials=credentials)
+    if request.method == 'GET':
+        if 'event_title' in request.GET:
+            calendar_id = CAL_ID  # Replace with your calendar ID
+            now = datetime.utcnow()
+            events_result = service.events().list(
+            calendarId=calendar_id,
+            timeMin=now.isoformat() + 'Z',  # Filter events that start from now or later
+            maxResults=10,  # Maximum number of events to retrieve
+            singleEvents=True,
+            orderBy='startTime'
+            ).execute()
+            events = events_result.get('items', [])
+            for event in events:
+                due_date_var = event.get('end', '')
+                if due_date_var:
+                    due_date_string = due_date_var['date']
+                    due_date_date = datetime.strptime(due_date_string, '%Y-%m-%d')
+                start_date_var = event.get('start', '')
+                if start_date_var:
+                    start_date_string = start_date_var['date']
+                    start_date_date = datetime.strptime(start_date_string, '%Y-%m-%d')
+                if event.get('summary', '') == event_title:
+                    if due_date_date.date() == due_date_date.date() and start_date_date.date() == start_date_date.date():
+                        event_id = event.get('id', '')
+                        extended_properties = event.get('extendedProperties', {}).get('private', {})
+
+                        priority = extended_properties.get('priority', '').lower()
+                        progress = extended_properties.get('progress', '').lower()
+                        time_to_spend = extended_properties.get('time_to_spend', '')
+                        amount_per_week = extended_properties.get('amount_per_week', '')
+
+                    context = {
+                        'event_id': event_id,
+                        'event_title': event.get('summary', ''),
+                        'due_date': due_date_date.strftime('%Y-%m-%d'),
+                        'start_date': start_date_date.strftime('%Y-%m-%d'),
+                        'priority': priority,
+                        'progress': progress,
+                        'time_to_spend': time_to_spend,
+                        'amount_per_week': amount_per_week
+                    }
+                    return render(request, 'calendar/edit_event.html', context)
+        context = {}
+        return render(request, 'calendar/edit_assignment.html', context)

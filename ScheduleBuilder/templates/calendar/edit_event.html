@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title style="color: rgb(255, 255, 255);">Assignment Edit Page</title>
+    {% load static %}
+    
+    {% include 'bootstrap.html' %}
+    
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/" style="color: #49dfa3;">Home</a>
+            <a class="navbar-brand" href="/calendar" style="color: #49dfa3;">Calendar</a>
+            <a class="navbar-brand" href="https://canvas.csuchico.edu" style="color: #49dfa3;">Canvas</a>
+            <a class="navbar-brand" href="/parser" style="color: #49dfa3;">Manual Form Upload</a>
+            <a class="navbar-brand" href="/icalendar" style="color: #49dfa3;">Icalendar Upload</a>
+            {% if user.is_authenticated %}
+                <a class="btn" style="background-color: #49dfa3; color: white;" href="{% url 'logout' %}">Logout</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-6">
+            <iframe src="https://calendar.google.com/calendar/embed?src=c_6ed17073345c64d5b392f5a8ef7b4a62938f12c8fc5fecfa4b7256ef88acad28%40group.calendar.google.com&ctz=America%2/Los_Angeles" style="border: 0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
+        </div>
+
+        <div class="col-md-6">
+            <div class="jumbotron jumbotron-shrink">
+                <h2 style="color: rgb(100, 95, 95);">Edit Event</h2>
+                <form method="post" >
+                    {% csrf_token %}
+                    <label for="event-title" required style="color: rgb(100, 95, 95);">Event Title:</label>
+                    <input type="text" class="form-control" id="event-title" name="event_title" value="{{ event_title }}" required>
+                    <br>
+                    <label for="start-date" required style="color: rgb(100, 95, 95);">Start Date (YYYY-MM-DD):</label>
+                    <input type="text" class="form-control" id="start-date" name="start_date" value="{{ start_date }}" required>
+                    <br>
+                    <label for="due-date" required style="color: rgb(100, 95, 95);">Due Date (YYYY-MM-DD):</label>
+                    <input type="text" class="form-control" id="due-date" name="due_date" value="{{ due_date }}" required>
+                    <br>
+                    <button type="submit" class="btn btn-primary" style="background-color: #49dfa3; color: white;">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>  
+</body>
+</html>
