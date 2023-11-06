@@ -10,9 +10,6 @@ from .ScheduleParser import parse_keywords, parse_tables, parse_schedule, extrac
 import pdfplumber
 import re
 import pandas as pd
-from django.contrib.auth.views import LoginView
-from .forms import RegistrationForm
-from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 
 @login_required
@@ -43,7 +40,6 @@ def icalendar(request):
         return redirect('icalendar-add')
     return render(request, 'parser/icalendar.html')
 
-@login_required
 def parser(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
@@ -90,14 +86,5 @@ def parser(request):
 
     return render(request, 'parser/parser.html', {'form': form})
 
-def registration(request):
-    if request.method == 'POST':
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('home')  # Redirect to the home page after successful registration
-    else:
-        form = RegistrationForm()
-    return render(request, 'registration/registration.html', {'form': form})
+
 

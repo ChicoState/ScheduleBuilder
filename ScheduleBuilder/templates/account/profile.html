@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid">
+	<div class="d-flex flex-row justify-content-center flex-wrap align-items-start">
+
+		<div class="card profile-card m-2">
+		  <div class="card-body">
+		  	<div class="d-flex flex-column justify-content-center p-4">
+		  		<p class="mt-4 mb-1 field-heading">Email:</p>
+		  		{{ email }}
+		  		<p class="mt-4 mb-1 field-heading">Username:</p>
+		  		<h5>{{username}}</h5>
+		  	</div>
+		  </div>
+		</div>
+
+		{% if request_sent == 0 %}
+			<div class="card m-2 p-4">
+				<div class="d-flex flex-row align-items-center">
+					<span id="id_cancel_{{id}}" class="decline-friend-request material-icons p-1" onclick='triggerDeclineFriendRequest("{{pending_friend_request_id}}")'>Decline</span>
+					<span id="id_confirm_{{id}}" class="confirm-friend-request material-icons p-1" onclick='triggerAcceptFriendRequest("{{pending_friend_request_id}}")'>Accept</span>
+				</div>
+			</div>
+		{% endif %}
+
+		<div class="card m-2 px-4 pb-4">
+			{% if is_friend == False and is_self == False %}
+					{% if request_sent == 1 %}
+					<div class="d-flex flex-column align-items-center pt-4">
+						<button class="btn btn-danger" id="id_cancel_friend_request_btn">
+							Cancel Friend Request
+						</button>
+					</div>
+					{% endif %}
+					{% if request_sent == -1 %}
+					<div class="d-flex flex-column align-items-center pt-4">
+						<button class="btn btn-primary" id="id_send_friend_request_btn">
+							Send Friend Request
+						</button>
+					</div>
+					{% endif %}
+			{% endif %}
+				
+				
+			{% if is_friend %}
+				<div class="dropdown pt-4 m-auto">
+					<button class="btn btn-secondary dropdown-toggle friends-btn" type="button" id="id_friends_toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Friends
+					</button>
+					<div class="dropdown-menu" aria-labelledby="id_friends_toggle">
+						<a class="dropdown-item" href="#" onclick="removeFriend('{{id}}', onFriendRemoved)">Unfriend</a>
+					</div>
+				</div>
+			{% endif %}
+			
+			<div class="d-flex flex-column pt-4">
+				<a href="{% url 'friend:list' user_id=id %}">
+					<div class="d-flex flex-row align-items-center justify-content-center icon-container">
+						<span class="friend-text">Friends ({{friends|length}})</span>
+					</div>
+				</a>
+			</div>
+
+		</div>
+		{% if friend_requests %}
+		<div class="card m-2 px-4 pb-4">
+			<div class="d-flex flex-column pt-4">
+				<a href="{% url 'friend:friend-requests' user_id=id %}">
+					<div class="d-flex flex-row align-items-center justify-content-center icon-container">
+						<span class="friend-text">Friend Requests ({{friend_requests|length}})</span>
+					</div>
+				</a>
+			</div>
+		</div>
+		{% endif %}
+	</div>
+</div>
+
+<script type="text/javascript">
+
+	function onFriendRequestSent(){
+		location.reload();
+	}
+
+	function onFriendRequestCancelled(){
+		location.reload();
+	}
+
+	function onFriendRemoved(){
+		location.reload();
+	}
+
+	function onFriendRequestAccepted(){
+		location.reload();
+	}
+
+	function onFriendRequestDeclined(){
+		location.reload();
+	}
+
+	var sendFriendRequestBtn = document.getElementById("id_send_friend_request_btn")
+	if (sendFriendRequestBtn != null){
+		sendFriendRequestBtn.addEventListener("click", function(){
+			sendFriendRequest("{{id}}", onFriendRequestSent)
+		})
+	}
+
+	var cancelFriendRequestBtn = document.getElementById("id_cancel_friend_request_btn")
+	if(cancelFriendRequestBtn != null){
+		cancelFriendRequestBtn.addEventListener("click", function(){
+			cancelFriendRequest("{{id}}", onFriendRequestCancelled)
+		})
+	}
+
+	var removeFriendBtn = document.getElementById("id_unfriend_btn")
+	if (removeFriendBtn != null){
+		removeFriendBtn.addEventListener("click", function(){
+			removeFriend("{{id}}", onFriendRemoved)
+		})
+	}
+
+	function triggerAcceptFriendRequest(friend_request_id){
+		acceptFriendRequest(friend_request_id, onFriendRequestAccepted)
+	}
+
+	function triggerDeclineFriendRequest(friend_request_id){
+		declineFriendRequest(friend_request_id, onFriendRequestDeclined)
+	}
+	
+</script>
+
+{% include 'account/snippets/send_friend_request.html' %}
+{% include 'account/snippets/accept_friend_request.html' %}
+{#% include 'decline_friend_request.html' %#}
+{#% include 'cancel_friend_request.html' %#}
+{#% include 'remove_friend.html' %#}
+
+{% endblock content %}
+
+
+
