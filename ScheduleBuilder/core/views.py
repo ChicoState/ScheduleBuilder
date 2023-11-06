@@ -29,7 +29,8 @@ from datetime import datetime
 # constants for connecting to google calendar API
 CAL_ID = config('CAL_ID')
 SCOPES = ['https://www.googleapis.com/auth/calendar']
-SERVICE_ACCOUNT_FILE = './core/calendar-credentials.json'
+SERVICE_ACCOUNT_FILE = 'calendar-credentials.json'
+file_path = os.path.join(os.path.dirname(__file__), SERVICE_ACCOUNT_FILE)
 
 @login_required
 def extract_text_from_pdf(pdf_file):
@@ -45,7 +46,7 @@ def extract_text_from_pdf(pdf_file):
 @login_required
 def home(request):
     # Credentials to connect to google cloud API and service account to add events to calendar
-    credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    credentials = service_account.Credentials.from_service_account_file(file_path, scopes=SCOPES)
     service = googleapiclient.discovery.build('calendar', 'v3', credentials=credentials)
     # Define parameters to fetch upcoming events
     calendar_id = CAL_ID  # Replace with your calendar ID
