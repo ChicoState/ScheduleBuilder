@@ -25,7 +25,11 @@ def extract_text_from_pdf(pdf_file):
 
 @login_required
 def home(request):
-    return render(request, 'core/home.html')
+    user = request.user  # Assuming the user is authenticated
+    context = {
+        'user_name': user.username
+    }
+    return render(request, 'core/home.html', context)
 
 @login_required
 def icalendar(request):
