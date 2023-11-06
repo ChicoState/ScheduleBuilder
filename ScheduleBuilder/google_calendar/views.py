@@ -32,10 +32,12 @@ def create_calendar(request):
                 calendar.save()
                 name = add_form.cleaned_data['name']
                 calendar_attrs = {
-                        'summary': name
+                        'summary': name,
                 }
                 response = service.calendars().insert(body=calendar_attrs).execute()
                 print(response)
+                calendar_list = service.calendarList().list().execute()
+                print(calendar_list)
                 return redirect('/calendar/')
                 # if add form isnt valid
             else:
