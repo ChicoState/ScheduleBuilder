@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect 
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
-from google_calendar.forms import EventForm, SubmitType
+from google_calendar.forms import EventForm, SubmitType, CalendarForm
 
 from decouple import config
 from google.oauth2 import service_account
@@ -18,9 +19,8 @@ SCOPES = ['https://www.googleapis.com/auth/calendar']
 SERVICE_ACCOUNT_FILE = './core/calendar-credentials.json'
 
 # view for localhost/calendar/
-
-
-def calendar(request):
+@login_required(login_url='/login/')
+def main(request):
     results = []
     context = {"results": results}
     return render(request, 'calendar/calendar.html', context)
@@ -69,7 +69,45 @@ def get_recurrence_rule(option, due_date):
     return recurrence_rule
 
 
+@login_required(login_url='/login/')
+def create_calendar(request):
+    credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    service = googleapiclient.discovery.build('calendar', 'v3', credentials=credentials)
+    if request.method == 'POST':
+        if 'add' in request.POST:
+            # form to add event
+            add_form = CalendarForm(request.POST)
+            if add_form.is_valid():
+                calendar = add_form.save(commit=False)
+                calendar.save()
+                name = add_form.cleaned_data['name']
+                calendar_attrs = {
+                        'summary': name,
+                }
+                response = service.calendars().insert(body=calendar_attrs).execute()
+                print(response)
+                calendar_list = service.calendarList().list().execute()
+                print(calendar_list)
+                return redirect('/calendar/')
+                # if add form isnt valid
+            else:
+                context = {
+                    'form_data': add_form
+                }
+                return render(request, 'calendar/create_calendar.html', context)
+        else: 
+            # canceled
+            return redirect('/calendar/')
+    else:
+        context = {
+            'form_data' : CalendarForm()
+        }
+        return render(request, 'calendar/create_calendar.html', context)
+
+    return HttpResponse("Create Calendar Page")
+
 # View for localhost/calendar/add/
+@login_required(login_url='/login/')
 def add(request):
     # Credentials to connect to google cloud API and service account to add events to calendar
     credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
@@ -131,9 +169,10 @@ def add(request):
         due_date = request.GET.get('due_date', '')
         form_data = EventForm(initial={'event_name': event_name, 'class_name': class_name, 'due_date': due_date})
         context = {
-            'form_data' : form_data
+            'form_data' : EventForm()
         }
         return render(request, 'calendar/add_assignment.html', context)
+        
     
 def delete(request):
     event_title = request.GET.get('event_title')

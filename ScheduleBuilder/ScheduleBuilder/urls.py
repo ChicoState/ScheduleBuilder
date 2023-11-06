@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import TemplateView
+from django.contrib.auth.views import LogoutView, LoginView
 from core import views as core_views
 from google_calendar import views as cal_views
 from django.contrib.auth.views import LoginView
@@ -24,12 +26,17 @@ from django.contrib.auth.views import LogoutView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', core_views.home, name='home'),
-    path('calendar/', cal_views.calendar, name='calendar'),
+    path('calendar/', cal_views.main, name='calendar'),
     path('icalendar/', cal_views.icalendar, name='icalendar-add'),
     path('calendar/add_assignment/',cal_views.add, name='calendar-add'),
-    path('login/', LoginView.as_view(), name='login'),
-    path('register/', core_views.registration, name='register'),
+    path('calendar/create_calendar/', cal_views.create_calendar, name='create calendar'),
+    path('accounts/', include('allauth.urls')),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('parser/', core_views.parser, name='parser'),
-    path('calendar/delete/',cal_views.delete, name='calendar-delete')
+    path('calendar/delete/',cal_views.delete, name='calendar-delete'),
+    path("~redirect/", view=core_views.UserRedirectView.as_view(), name="redirect"),
+    path('register/', core_views.registration, name='register'),
+    
+    
 ]
+# template_name='google-auth/test.html'
