@@ -15,7 +15,7 @@
     <link href="" rel="stylesheet">
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'style.css' %}">
-    <title>Schedule Builder</title>
+    <title style="color: white;">Schedule Builder</title>
 
 </head>
 
@@ -35,13 +35,13 @@
     </nav>
     <div class="container mt-4 text-center">
         <center>
-            <h1>Schedule Builder</h1>
+            <h1 style="color: white;">Schedule Builder</h1>
         </center>
-        <h2 class="mt-4">File Upload</h2>
-        <form method="post" enctype="multipart/form-data">
+        <h2 class="mt-4" style="color: white;">File Upload</h2>
+        <form method="post" enctype="multipart/form-data" style="color: white;">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="btn btn-success">Upload File</button>
+            <button type="submit" class="btn btn-success" style="background-color: #49dfa3; color: white;">Upload File</button>
         </form>
     </div>
     <!-- List View of Events -->

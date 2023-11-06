@@ -6,7 +6,7 @@
     {% load static %}
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'style.css' %}">
-    <title>Assignment Stats</title>
+    <title style="color: white;">Assignment Stats</title>
 </head>
 
 <body>
@@ -22,14 +22,14 @@
             {% endif %}
         </div>
     </nav>
-    <center><h1>Assignment Stats</h1></center>
+    <center><h1 style="color: white;">Assignment Stats</h1></center>
     
-    <h2>Parsed Contents:</h2>
+    <h2 style="color: white;">Parsed Contents:</h2>
     <ul>
-        <li><strong>Class Name:</strong> {{ parsed_contents.class_name }}</li>
-        <li><strong>Title:</strong> {{ parsed_contents.assignment_title }}</li>
-        <li><strong>Description:</strong> {{ parsed_contents.assignment_description }}</li>
-        <li><strong>Due Date:</strong> {{ parsed_contents.due_date }}</li>
+        <li><strong style="color: white;">Class Name:</strong> {{ parsed_contents.class_name }}</li>
+        <li><strong style="color: white;">Title:</strong> {{ parsed_contents.assignment_title }}</li>
+        <li><strong style="color: white;">Description:</strong> {{ parsed_contents.assignment_description }}</li>
+        <li><strong style="color: white;">Due Date:</strong> {{ parsed_contents.due_date }}</li>
         </li>
     </ul>
 </body>

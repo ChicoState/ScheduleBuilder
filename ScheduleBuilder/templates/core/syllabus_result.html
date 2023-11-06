@@ -7,7 +7,7 @@
     
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'style.css' %}">
-    <title>Syllabus Result</title>
+    <title style="color: white;">Syllabus Result</title>
 </head>
 
 <body>
@@ -26,13 +26,13 @@
 
     <div class="container mt-4">
         <center>
-            <h1>Syllabus Result</h1>
+            <h1 style="color: white;">Syllabus Result</h1>
         </center>
         
         {% if Important_Syllabus_Info %}
-            <h2>Course Title:</h2>
+            <h2 style="color: white;">Course Title:</h2>
             <p>{{ Course }}</p>
-            <h3>Keywords Count:</h3>
+            <h3 style="color: white;">Keywords Count:</h3>
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -51,7 +51,7 @@
             </table>
             
             {% for table_data in tables_parsed %}
-                <h2>Table {{ forloop.counter }}</h2>
+                <h2 style="color: white;">Table {{ forloop.counter }}</h2>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -73,7 +73,7 @@
             {% endfor %}
             
             {% if schedule %}
-                <h2>Weekly Outline</h2>
+                <h2 style="color: white;">Weekly Outline</h2>
                 <ul class="list-group">
                     {% for week in schedule %}
                     <li class="list-group-item">{{ week }}</li>
@@ -82,7 +82,7 @@
             {% endif %}
             
             {% if grade_breakdown %}
-                <h3>Grade Breakdown:</h3>
+                <h3 style="color: white;">Grade Breakdown:</h3>
                 <p>{{ grade_breakdown }}</p>
             {% endif %}
         {% endif %}
