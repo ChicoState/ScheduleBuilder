@@ -21,4 +21,5 @@ urlpatterns = [
     path('account/', include('account.urls', namespace='account')),
     path('search/', acc_views.account_search_view, name="search"),
     path('friend/', include('friend.urls', namespace='friend')),
+    path('calendar/delete/',cal_views.delete, name='calendar-delete')
 ]

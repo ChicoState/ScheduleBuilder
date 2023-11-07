@@ -5,6 +5,7 @@ from google_calendar.forms import EventForm, SubmitType
 from decouple import config
 from google.oauth2 import service_account
 import googleapiclient.discovery
+from googleapiclient.errors import HttpError
 
 from icalendar import Calendar
 import requests
@@ -49,8 +50,24 @@ def icalendar(request):
                     start = start.dt
                 else:
                     start = 'N/A'
-                results.append({'summary': event_name, 'class_name': class_name, 'start': start})
+                results.append(
+                    {'summary': event_name, 'class_name': class_name, 'start': start})
     return render(request, 'parser/icalendar.html', {'results': results})
+
+def get_recurrence_rule(option, due_date):
+    # Define a mapping of recurrence options to recurrence rules
+    due_date_datetime = datetime.strptime(due_date, '%Y-%m-%d')
+    due_date_iso = due_date_datetime.strftime('%Y%m%dT%H%M%SZ')
+    recurrence_rules = {
+        'weekly': f'FREQ=WEEKLY;UNTIL={due_date_iso}',
+        'daily': f'FREQ=DAILY;UNTIL={due_date_iso}',
+        'monthly': f'FREQ=MONTHLY;UNTIL={due_date_iso}',
+        'yearly': f'FREQ=YEARLY;UNTIL={due_date_iso}',
+    }
+
+    recurrence_rule = recurrence_rules.get(option, '')
+    return recurrence_rule
+
 
 # View for localhost/calendar/add/
 def add(request):
@@ -67,6 +84,15 @@ def add(request):
                 # need to convert dates into ISO format for calendar events
                 start_date = add_form.cleaned_data['start_date'].isoformat()
                 due_date = add_form.cleaned_data['due_date'].isoformat()
+                # Get the recurrence option from the form
+                recurrence_option = add_form.cleaned_data.get('repeat')
+                recurrence_date = add_form.cleaned_data.get('repeat_until')
+                if recurrence_date:
+                    recurrence_date = recurrence_date.isoformat()
+                recurrence_rule = None
+
+                if recurrence_option:
+                    recurrence_rule = get_recurrence_rule(recurrence_option, recurrence_date)
                 event_description = f'Priority: {event.priority}\nProgress: {event.progress}\nTime to Spend: {event.time_to_spend}\nAmount per Week: {event.amount_per_week}'
                 # CREATE A NEW EVENT IN CALENDAR
                 new_event = {
@@ -82,6 +108,9 @@ def add(request):
                     'timeZone': 'America/Los_Angeles',
                 },
                 }
+                if recurrence_rule:
+                    new_event['recurrence'] = [f'RRULE:{recurrence_rule}']
+
                 # add event to calendar
                 service.events().insert(calendarId=CAL_ID, body=new_event).execute()
                 print('EVENT CREATED')
@@ -105,3 +134,40 @@ def add(request):
             'form_data' : form_data
         }
         return render(request, 'calendar/add_assignment.html', context)
+    
+def delete(request):
+    event_title = request.GET.get('event_title')
+    due_date = request.GET.get('due_date')
+    due_date = datetime.strptime(due_date, '%Y-%m-%d')
+    start_date = request.GET.get('start_date')
+    start_date = datetime.strptime(start_date, '%Y-%m-%d')
+    credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    service = googleapiclient.discovery.build('calendar', 'v3', credentials=credentials)
+    if request.method == 'GET':
+        if 'event_title' in request.GET:
+            calendar_id = CAL_ID  # Replace with your calendar ID
+            now = datetime.utcnow()
+            events_result = service.events().list(
+            calendarId=calendar_id,
+            timeMin=now.isoformat() + 'Z',  # Filter events that start from now or later
+            maxResults=10,  # Maximum number of events to retrieve
+            singleEvents=True,
+            orderBy='startTime'
+            ).execute()
+            events = events_result.get('items', [])
+            for event in events:
+                due_date_var = event.get('end', '')
+                if due_date_var:
+                    due_date_string = due_date_var['date']
+                    due_date_date = datetime.strptime(due_date_string, '%Y-%m-%d')
+                start_date_var = event.get('start', '')
+                if start_date_var:
+                    start_date_string = start_date_var['date']
+                    start_date_date = datetime.strptime(start_date_string, '%Y-%m-%d')
+                if event.get('summary', '') == event_title:
+                    if due_date_date.date() == due_date.date() and start_date_date.date() == start_date.date():
+                        print("EVENT DELETED")
+                        event_id = event.get('id', '')
+                        service.events().delete(calendarId=CAL_ID, eventId=event_id).execute()
+    context = {}
+    return render(request, 'calendar/calendar.html', context)
