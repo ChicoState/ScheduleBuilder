@@ -17,7 +17,7 @@ urlpatterns = [
     path('register/', acc_views.registration, name='register'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('parser/', core_views.parser, name='parser'),
-    path('icalendar/', core_views.icalendar, name='icalendar'),
+    path('icalendar/', cal_views.icalendar, name='icalendar'),
     path('account/', include('account.urls', namespace='account')),
     path('search/', acc_views.account_search_view, name="search"),
     path('friend/', include('friend.urls', namespace='friend')),

@@ -1,60 +1,35 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title style="color: white;">Upcoming Assignments</title>
-    {% load static %}
-    
-    {% include 'bootstrap.html' %}
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-</head>
+{% block title %}
+Upcoming Assignments
+{% endblock %}
 
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/" style="color: #49dfa3;">Home</a>
-            <a class="navbar-brand" href="/calendar" style="color: #49dfa3;">Calendar</a>
-            <a class="navbar-brand" href="https://canvas.csuchico.edu" style="color: #49dfa3;">Canvas</a>
-            <a class="navbar-brand" href="/parser" style="color: #49dfa3;">Manual Form Upload</a>
-            <a class="navbar-brand" href="/icalendar" style="color: #49dfa3;">Icalendar Upload</a>
-            {% if user.is_authenticated %}
-                <a class="btn" style="background-color: #49dfa3; color: white;" href="{% url 'logout' %}">Logout</a>
-            {% endif %}
-        </div>
-    </nav>
-
-    <div class="container mt-4 text-center">
-        <h1 style="color: white;">Upcoming Assignments</h1>
-        <a href="add_assignment/" class="btn btn-primary" style="background-color: #49dfa3; color: white;">Add Assignment</a>
-        <form id="delete-assignment-form" action="/calendar/delete" method="delete">
-            <div class="form-group">
-              <label for="event-title-input" required style="color: white;">Event Title:</label>
-              <input type="text" class="form-control" id="event-title-input" name="event_title" required>
-            </div>
-            <div class="form-group">
-              <label for="due-date-input" required style="color: white;">Due Date (YYYY-MM-DD):</label>
-              <input type="text" class="form-control" id="due-date-input" name="due_date" required>
-            </div>
-            <div class="form-group">
-              <label for="start-date-input" required style="color: white;">Start Date (YYYY-MM-DD):</label>
-              <input type="text" class="form-control" id="start-date-input" name="start_date" required>
-            </div>
-            <button type="submit" class="btn btn-primary" style="background-color: #49dfa3; color: white;">Delete Event</button>
-          </form>
-        <ul class="list-group mt-3">
-            {% comment %} Will print the list of events in a human-readable format next sprint {% endcomment %}
-            {% for result in results %}
-            <li class="list-group-item">{{ result.start.date }}{% if result.end.date %} - {{ result.end.date }}{% endif %}: {{ result.summary }}</li>
-            {% endfor %}
-        </ul>
-        
-        {% comment %} Embedded Calendar {% endcomment %}
-        <iframe src="https://calendar.google.com/calendar/embed?src=c_6ed17073345c64d5b392f5a8ef7b4a62938f12c8fc5fecfa4b7256ef88acad28%40group.calendar.google.com&ctz=America%2FLos_Angeles" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
-    </div>
-
-</body>
-
-</html>
+{% block content %}
+<div class="container mt-4 text-center">
+  <a href="add_assignment/" class="btn btn-primary" style="background-color: #49dfa3; color: white;">Add Assignment</a>
+  <form id="delete-assignment-form" action="/calendar/delete" method="delete">
+      <div class="form-group">
+        <label for="event-title-input" required style="color: white;">Event Title:</label>
+        <input type="text" class="form-control" id="event-title-input" name="event_title" required>
+      </div>
+      <div class="form-group">
+        <label for="due-date-input" required style="color: white;">Due Date (YYYY-MM-DD):</label>
+        <input type="text" class="form-control" id="due-date-input" name="due_date" required>
+      </div>
+      <div class="form-group">
+        <label for="start-date-input" required style="color: white;">Start Date (YYYY-MM-DD):</label>
+        <input type="text" class="form-control" id="start-date-input" name="start_date" required>
+      </div>
+      <button type="submit" class="btn btn-primary" style="background-color: #49dfa3; color: white;">Delete Event</button>
+    </form>
+  <ul class="list-group mt-3">
+      {% comment %} Will print the list of events in a human-readable format next sprint {% endcomment %}
+      {% for result in results %}
+      <li class="list-group-item">{{ result.start.date }}{% if result.end.date %} - {{ result.end.date }}{% endif %}: {{ result.summary }}</li>
+      {% endfor %}
+  </ul>
+  
+  {% comment %} Embedded Calendar {% endcomment %}
+  <iframe src="https://calendar.google.com/calendar/embed?src=c_6ed17073345c64d5b392f5a8ef7b4a62938f12c8fc5fecfa4b7256ef88acad28%40group.calendar.google.com&ctz=America%2FLos_Angeles" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+</div>
+{% endblock %}
