@@ -41,8 +41,8 @@
 				</div>
 			</a>
 			<div class="d-flex flex-row card-right flex-grow-1 justify-content-end mx-2">
-	  			<span id="id_cancel_{{request.sender.id}}" class="decline-friend-request material-icons p-1" onclick='triggerDeclineFriendRequest("{{request.id}}")'>Decline</span>
-	  			<span id="id_confirm_{{request.sender.id}}" class="confirm-friend-request material-icons p-1" onclick='triggerAcceptFriendRequest("{{request.id}}")'>Accept</span>
+	  			<span id="id_cancel_{{request.sender.id}}" class="decline-friend-request p-1" onclick='triggerDeclineFriendRequest("{{request.id}}")'>Decline</span>
+	  			<span id="id_confirm_{{request.sender.id}}" class="confirm-friend-request p-1" onclick='triggerAcceptFriendRequest("{{request.id}}")'>Accept</span>
 			</div>
 		</div>
 		{% if forloop.counter|divisibleby:2 %}
@@ -53,7 +53,7 @@
 		
 		{% else %} 
 		<div class="d-flex flex-row flex-grow-1 justify-content-center align-items-center p-4">
-			<p>No results</p>
+			<h3>No results</h3>
 		</div>
 		{% endif %}
 		</div>
@@ -76,12 +76,12 @@
 	}
 
 	function triggerDeclineFriendRequest(friend_request_id){
-		//declineFriendRequest(friend_request_id, onFriendRequestDeclined)
+		declineFriendRequest(friend_request_id, onFriendRequestDeclined)
 	}
 </script>
 
 {% include 'account/snippets/accept_friend_request.html' %}
-{#% include 'account/snippets/decline_friend_request.html' %#}
+{% include 'account/snippets/decline_friend_request.html' %}
 
 
 {% endblock content %}

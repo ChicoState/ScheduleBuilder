@@ -1,7 +1,38 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}
+{{username}}'s Profile
+{% endblock %}
+
 {% block content %}
+
+<style type="text/css">
+	p{
+		color: black
+	}
+	.profile-link{
+		color: #000;
+	}
+	.material-icons{
+		font-size: 30px;
+	}
+	.material-icons:hover{
+		cursor: pointer;
+	}
+	.confirm-friend-request{
+		color: green;
+	}
+	.confirm-friend-request:hover {
+		opacity: 0.3;
+	}
+	.decline-friend-request:hover {
+		opacity: 0.3;
+	}
+	.decline-friend-request{
+		color: red;
+	}
+</style>
 
 <div class="container-fluid">
 	<div class="d-flex flex-row justify-content-center flex-wrap align-items-start">
@@ -20,7 +51,7 @@
 		{% if request_sent == 0 %}
 			<div class="card m-2 p-4">
 				<div class="d-flex flex-row align-items-center">
-					<span id="id_cancel_{{id}}" class="decline-friend-request material-icons p-1" onclick='triggerDeclineFriendRequest("{{pending_friend_request_id}}")'>Decline</span>
+					<span id="id_cancel_{{id}}" class="decline-friend-request material-icons p-1" onclick='triggerAcceptFriendRequest("{{pending_friend_request_id}}")'>Decline</span>
 					<span id="id_confirm_{{id}}" class="confirm-friend-request material-icons p-1" onclick='triggerAcceptFriendRequest("{{pending_friend_request_id}}")'>Accept</span>
 				</div>
 			</div>
@@ -47,12 +78,7 @@
 				
 			{% if is_friend %}
 				<div class="dropdown pt-4 m-auto">
-					<button class="btn btn-secondary dropdown-toggle friends-btn" type="button" id="id_friends_toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					Friends
-					</button>
-					<div class="dropdown-menu" aria-labelledby="id_friends_toggle">
-						<a class="dropdown-item" href="#" onclick="removeFriend('{{id}}', onFriendRemoved)">Unfriend</a>
-					</div>
+					<a href="#" onclick="removeFriend('{{id}}', onFriendRemoved)">Unfriend</a>
 				</div>
 			{% endif %}
 			
@@ -134,9 +160,9 @@
 
 {% include 'account/snippets/send_friend_request.html' %}
 {% include 'account/snippets/accept_friend_request.html' %}
-{#% include 'decline_friend_request.html' %#}
-{#% include 'cancel_friend_request.html' %#}
-{#% include 'remove_friend.html' %#}
+{% include 'account/snippets/decline_friend_request.html' %}
+{% include 'account/snippets/cancel_friend_request.html' %}
+{% include 'account/snippets/remove_friend.html' %}
 
 {% endblock content %}
 

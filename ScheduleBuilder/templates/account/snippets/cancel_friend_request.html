@@ -1,14 +1,19 @@
 <script type="text/javascript">
-	function acceptFriendRequest(friend_request_id, uiUpdateFunction){
-		var url = "{% url 'friend:friend-request-accept' friend_request_id=53252623623632623 %}".replace("53252623623632623", friend_request_id)
+	
+	function cancelFriendRequest(id, uiUpdateFunction){
+		payload = {
+			"csrfmiddlewaretoken": "{{ csrf_token }}",
+			"receiver_user_id": id,
+		}
 		$.ajax({
-			type: 'GET',
+			type: 'POST',
 			dataType: "json",
-			url: url,
+			url: "{% url 'friend:friend-request-cancel' %}",
+			data: payload,
 			timeout: 5000,
 			success: function(data) {
 				console.log("SUCCESS", data)
-				if(data['response'] == "Friend request accepted."){
+				if(data['response'] == "Friend request canceled."){
 				}
 				else if(data['response'] != null){
 					alert(data['response'])
@@ -24,3 +29,13 @@
 		});
 	}
 </script>
+
+
+
+
+
+
+
+
+
+

@@ -26,7 +26,7 @@ def friends_list_view(request, **kwargs):
 			if user != this_user:
 				if not user in friend_list.friends.all():
 					return HttpResponse("You must be friends to view their friends list.")
-			friends = [] # [(friend1, True), (friend2, False), ...]
+			friends = [] 
 			# get the authenticated users friend list
 			auth_user_friend_list = FriendList.objects.get(user=user)
 			for friend in friend_list.friends.all():
@@ -34,7 +34,7 @@ def friends_list_view(request, **kwargs):
 			context['friends'] = friends
 	else:		
 		return HttpResponse("You must be friends to view their friends list.")
-	return render(request, "friend_list.html", context)
+	return render(request, "account/friend_list.html", context)
 
 
 def friend_requests(request, **kwargs):
@@ -98,8 +98,8 @@ def accept_friend_request(request, **kwargs):
 			friend_request = FriendRequest.objects.get(pk=friend_request_id)
 			if friend_request.receiver == user:
 				if friend_request: 
+					friend_request.accept()
 					payload['response'] = "Friend request accepted."
-
 				else:
 					payload['response'] = "Something went wrong."
 			else:
@@ -144,8 +144,8 @@ def decline_friend_request(request, *args, **kwargs):
 			if friend_request.receiver == user:
 				if friend_request: 
 					# found the request. Now decline it
-					updated_notification = friend_request.decline()
 					payload['response'] = "Friend request declined."
+					friend_request.decline()
 				else:
 					payload['response'] = "Something went wrong."
 			else:
