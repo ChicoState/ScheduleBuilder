@@ -31,5 +31,9 @@ urlpatterns = [
     path('register/', core_views.registration, name='register'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('parser/', core_views.parser, name='parser'),
-    path('calendar/delete/',cal_views.delete, name='calendar-delete')
+    path('calendar/edit_assignment/', cal_views.edit_event, name='calender-edit'),
+    path('calendar/edit/', cal_views.edit_event, name='edit_event'),
+    path('update_event/', cal_views.edit_event, name='update_event'),
+    path('calendar/delete_assignment/', cal_views.delete, name='calender-delete'),
+    path('calendar/delete/',cal_views.delete, name='calendar-delete'),
 ]
