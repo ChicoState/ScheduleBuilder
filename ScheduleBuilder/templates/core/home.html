@@ -1,51 +1,55 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 style="color: white;">Assignment Progress</h1>
-        <div class="progress">
-            <div class="progress-bar" role="progressbar" style="width: {{ overall_progress }}%; background-color: #49dfa3;" aria-valuenow="{{ overall_progress }}" aria-valuemin="0" aria-valuemax="100">
-                <span style="color: black;">{{ overall_progress }}%</span>
+<div class="container mt-4 text-center">
+            <h1 style="color: white;">Assignment Progress</h1>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: {{ overall_progress }}%; background-color: #49dfa3;" aria-valuenow="{{ overall_progress }}" aria-valuemin="0" aria-valuemax="100">
+                    <span style="color: black;">{{ overall_progress }}%</span>
+                </div>
             </div>
-        </div>
-        <h2 style="color: white;">Assignment List</h2>
-        <ul>
-            <li><strong style="color: white;">Not Started</strong></li>
+            <h2 style="color: white;">Assignment List</h2>
             <ul>
-                {% if not_started_assignments %}
-                    {% for event in not_started_assignments %}
-                        <li style="color: white;">{{ event }}</li>
-                    {% endfor %}
-                {% else %}
-                    <li style="color: white;">0</li>
-                {% endif %}
+                <li><strong style="color: white;">Not Started</strong></li>
+                <ul>
+                    {% if not_started_assignments %}
+                        {% for event in not_started_assignments %}
+                            <li style="color: white;">{{ event }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li style="color: white;">0</li>
+                    {% endif %}
+                </ul>
+                <li><strong style="color: white;">In Progress</strong></li>
+                <ul>
+                    {% if in_progress_assignments %}
+                        {% for event in in_progress_assignments %}
+                            <li style="color: white;">{{ event }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li style="color: white;">0</li>
+                    {% endif %}
+                </ul>
+                <li><strong style="color: white;">Completed</strong></li>
+                <ul>
+                    {% if completed_assignments %}
+                        {% for event in completed_assignments %}
+                            <li style="color: white;">{{ event }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li style="color: white;">0</li>
+                    {% endif %}
+                </ul>
             </ul>
-            <li><strong style="color: white;">In Progress</strong></li>
+            <h3 style="color: white;">To Do Today List</h3>
             <ul>
-                {% if in_progress_assignments %}
-                    {% for event in in_progress_assignments %}
-                        <li style="color: white;">{{ event }}</li>
-                    {% endfor %}
-                {% else %}
-                    <li style="color: white;">0</li>
-                {% endif %}
+                {% for title in today_event_titles %}
+                    <li style="color: white;">{{ title }}</li>
+                {% empty %}
+                    <li style="color: white;">No events due today that aren't completed</li>
+                {% endfor %}
             </ul>
-            <li><strong style="color: white;">Completed</strong></li>
-            <ul>
-                {% if completed_assignments %}
-                    {% for event in completed_assignments %}
-                        <li style="color: white;">{{ event }}</li>
-                    {% endfor %}
-                {% else %}
-                    <li style="color: white;">0</li>
-                {% endif %}
-            </ul>
-        </ul>
-        <h3 style="color: white;">To Do Today List</h3>
-        <ul>
-            {% for title in today_event_titles %}
-                <li style="color: white;">{{ title }}</li>
-            {% empty %}
-                <li style="color: white;">No events due today</li>
-            {% endfor %}
-        </ul>
+
+        
+    </div>
 {% endblock %}

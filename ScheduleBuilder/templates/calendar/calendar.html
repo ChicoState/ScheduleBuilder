@@ -6,30 +6,20 @@ Upcoming Assignments
 
 {% block content %}
 <div class="container mt-4 text-center">
-  <a href="add_assignment/" class="btn btn-primary" style="background-color: #49dfa3; color: white;">Add Assignment</a>
-  <form id="delete-assignment-form" action="/calendar/delete" method="delete">
-      <div class="form-group">
-        <label for="event-title-input" required style="color: white;">Event Title:</label>
-        <input type="text" class="form-control" id="event-title-input" name="event_title" required>
-      </div>
-      <div class="form-group">
-        <label for="due-date-input" required style="color: white;">Due Date (YYYY-MM-DD):</label>
-        <input type="text" class="form-control" id="due-date-input" name="due_date" required>
-      </div>
-      <div class="form-group">
-        <label for="start-date-input" required style="color: white;">Start Date (YYYY-MM-DD):</label>
-        <input type="text" class="form-control" id="start-date-input" name="start_date" required>
-      </div>
-      <button type="submit" class="btn btn-primary" style="background-color: #49dfa3; color: white;">Delete Event</button>
-    </form>
-  <ul class="list-group mt-3">
-      {% comment %} Will print the list of events in a human-readable format next sprint {% endcomment %}
-      {% for result in results %}
-      <li class="list-group-item">{{ result.start.date }}{% if result.end.date %} - {{ result.end.date }}{% endif %}: {{ result.summary }}</li>
-      {% endfor %}
-  </ul>
-  
-  {% comment %} Embedded Calendar {% endcomment %}
-  <iframe src="https://calendar.google.com/calendar/embed?src=c_6ed17073345c64d5b392f5a8ef7b4a62938f12c8fc5fecfa4b7256ef88acad28%40group.calendar.google.com&ctz=America%2FLos_Angeles" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+        <h1 style="color: white;">Upcoming Assignments</h1>
+        <div class="button-container">
+          <a href="add_assignment/" class="btn btn-primary" style="background-color: #49dfa3; color: white;">Add Assignment</a>
+          <a href="edit_assignment/" class="btn btn-primary" style="background-color: #49dfa3; color: white;">Edit Assignment</a>
+          <a href="delete_assignment/" class="btn btn-primary" style="background-color: #49dfa3; color: white;">Delete Assignment</a>
+        </div>
+        <ul class="list-group mt-3">
+            {% comment %} Will print the list of events in a human-readable format next sprint {% endcomment %}
+            {% for result in results %}
+            <li class="list-group-item">{{ result.start.date }}{% if result.end.date %} - {{ result.end.date }}{% endif %}: {{ result.summary }}</li>
+            {% endfor %}
+        </ul>
+        
+        {% comment %} Embedded Calendar {% endcomment %}
+        <iframe src="https://calendar.google.com/calendar/embed?src=c_6ed17073345c64d5b392f5a8ef7b4a62938f12c8fc5fecfa4b7256ef88acad28%40group.calendar.google.com&ctz=America%2FLos_Angeles" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
 </div>
 {% endblock %}
