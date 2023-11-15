@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 style="color: white;">Assignment Progress</h1>
+<div class="container mt-4 text-center">
+        <h1 style="color: white;">Assignment Progress</h1>
         <div class="progress">
             <div class="progress-bar" role="progressbar" style="width: {{ overall_progress }}%; background-color: #49dfa3;" aria-valuenow="{{ overall_progress }}" aria-valuemin="0" aria-valuemax="100">
                 <span style="color: black;">{{ overall_progress }}%</span>
@@ -45,7 +46,8 @@
             {% for title in today_event_titles %}
                 <li style="color: white;">{{ title }}</li>
             {% empty %}
-                <li style="color: white;">No events due today</li>
+                <li style="color: white;">No events due today that aren't completed</li>
             {% endfor %}
         </ul>
+</div>
 {% endblock %}

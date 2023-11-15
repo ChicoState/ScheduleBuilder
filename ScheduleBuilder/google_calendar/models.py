@@ -25,5 +25,15 @@ class Event(models.Model):
     progress = models.CharField(
         max_length=20,
         choices=[('not started', 'Not Started'), ('in progress', 'In Progress'), ('completed', 'Completed')],
-        default='not started'
+        default='not started'   
     )
+    
+class EditEvent(models.Model):
+    event_name = models.CharField(default="Event", verbose_name="Event Title", max_length=60)
+    start_date = models.DateField(default=datetime.date.today)
+    due_date = models.DateField(default=datetime.date.today)
+
+class DeleteEvent(models.Model):
+    event_name = models.CharField(default="Event", verbose_name="Event Title", max_length=60)
+    start_date = models.DateField(default=datetime.date.today)
+    due_date = models.DateField(default=datetime.date.today)

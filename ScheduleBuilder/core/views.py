@@ -63,22 +63,25 @@ def home(request):
             due_date_string = due_date['date']
             due_date_date = datetime.strptime(due_date_string, '%Y-%m-%d')
             current_date = datetime.now().date()
-
+            print(current_date)
+            print(due_date_date.date())
             if due_date_date.date() == current_date:
                 today_event_titles.append(event.get('summary', ''))
-        if "Progress: not started" in description:
-            not_started_assignments.append(event.get('summary', ''))
-        elif "Progress: in progress" in description:
-            in_progress_assignments.append(event.get('summary', ''))
-        elif "Progress: completed" in description:
-            completed_assignments.append(event.get('summary', ''))
+            if due_date_date.date() >= current_date:
+                if "Progress: not started" in description:
+                    not_started_assignments.append(event.get('summary', ''))
+                elif "Progress: in progress" in description:
+                    in_progress_assignments.append(event.get('summary', ''))
+                else:
+                    completed_assignments.append(event.get('summary', ''))
 
          # Calculate the overall progress for assignments
-    total_assignments = len(events)
+    total_assignments = len(in_progress_assignments) + len(completed_assignments) + len(not_started_assignments)
+    print(total_assignments)
     in_progress_count = len(in_progress_assignments)
     completed_count = len(completed_assignments)
     overall_progress = ((completed_count + (in_progress_count / 2)) / total_assignments) if total_assignments > 0 else 1.0
-
+    overall_progress = overall_progress * 100
     return render(request, 'core/home.html', {
         'overall_progress': overall_progress,
         'not_started_assignments': not_started_assignments,
