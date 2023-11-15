@@ -12,6 +12,7 @@ from icalendar import Calendar
 import requests
 from datetime import datetime
 import re
+import subprocess
 import time
 
 # constants for connecting to google calendar API

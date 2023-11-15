@@ -32,6 +32,7 @@ urlpatterns = [
     path('calendar/create_calendar/', cal_views.create_calendar, name='create calendar'),
     path('accounts/', include('allauth.urls')),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
+    path('login/', core_views.user_login, name='login'),
     path('parser/', core_views.parser, name='parser'),
     path('calendar/delete/',cal_views.delete, name='calendar-delete'),
     path("~redirect/", view=core_views.UserRedirectView.as_view(), name="redirect"),
