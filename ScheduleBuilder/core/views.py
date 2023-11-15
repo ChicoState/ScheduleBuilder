@@ -9,9 +9,8 @@ from .assignment_parser import assignment_parser
 from .ScheduleParser import parse_keywords, parse_tables, parse_schedule, extract_grade_breakdown
 import pdfplumber
 import re
-#import pandas as pd
+import pandas as pd
 from django.contrib.auth.views import LoginView
-from .forms import RegistrationForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from decouple import config
@@ -22,7 +21,8 @@ from datetime import datetime
 # constants for connecting to google calendar API
 CAL_ID = config('CAL_ID')
 SCOPES = ['https://www.googleapis.com/auth/calendar']
-SERVICE_ACCOUNT_FILE = './core/calendar-credentials.json'
+SERVICE_ACCOUNT_FILE = 'calendar-credentials.json'
+file_path = os.path.join(os.path.dirname(__file__), SERVICE_ACCOUNT_FILE)
 
 @login_required
 def extract_text_from_pdf(pdf_file):
@@ -37,8 +37,9 @@ def extract_text_from_pdf(pdf_file):
 
 @login_required
 def home(request):
+    user = request.user  # Assuming the user is authenticated
     # Credentials to connect to google cloud API and service account to add events to calendar
-    credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    credentials = service_account.Credentials.from_service_account_file(file_path, scopes=SCOPES)
     service = googleapiclient.discovery.build('calendar', 'v3', credentials=credentials)
     # Define parameters to fetch upcoming events
     calendar_id = CAL_ID  # Replace with your calendar ID
@@ -86,9 +87,9 @@ def home(request):
         'not_started_assignments': not_started_assignments,
         'in_progress_assignments': in_progress_assignments,
         'completed_assignments': completed_assignments,
-        'today_event_titles': today_event_titles })
+        'today_event_titles': today_event_titles, 
+        'user_name': user.username})
 
-@login_required
 def parser(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
@@ -135,14 +136,5 @@ def parser(request):
 
     return render(request, 'parser/parser.html', {'form': form})
 
-def registration(request):
-    if request.method == 'POST':
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('home')  # Redirect to the home page after successful registration
-    else:
-        form = RegistrationForm()
-    return render(request, 'registration/registration.html', {'form': form})
+
 

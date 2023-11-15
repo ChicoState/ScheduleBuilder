@@ -1,55 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %} 
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title style="color: rgb(255, 255, 255);">Assignment Add Page</title>
-    {% load static %}
-    
-    {% include 'bootstrap.html' %}
-    
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-</head>
+{% block title %}
+Add Event Page
+{% endblock %}
 
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/" style="color: #49dfa3;">Home</a>
-            <a class="navbar-brand" href="/calendar" style="color: #49dfa3;">Calendar</a>
-            <a class="navbar-brand" href="https://canvas.csuchico.edu" style="color: #49dfa3;">Canvas</a>
-            <a class="navbar-brand" href="/parser" style="color: #49dfa3;">Manual Form Upload</a>
-            <a class="navbar-brand" href="/icalendar" style="color: #49dfa3;">Icalendar Upload</a>
-            {% if user.is_authenticated %}
-                <a class="btn" style="background-color: #49dfa3; color: white;" href="{% url 'logout' %}">Logout</a>
-            {% endif %}
-        </div>
-    </nav>
-
-    <div class="container mt-4">
-        <h1 style="color: white;">Add Event Page</h1>
-        <div class="jumbotron">
-            <h2 style="color: rgb(100, 95, 95);">Add Event</h2>
-            <form method="post">
-                {% csrf_token %}
-                <table class="table">
-                    {{ form_data.as_table }}
-                    <tr>
-                        <td></td>
-                        <td>
-                            <a href="/calendar/" class="btn btn-secondary">Cancel</a>
-                            <input type="submit" class="btn btn-primary" name="add" value="Add event to calendar">
-                        </td>
-                    </tr>
-                </table>
-            </form>
-        </div>
+{% block content %}
+<div class="container mt-4">
+    <div class="jumbotron">
+        <h2 style="color: rgb(100, 95, 95);">Add Event</h2>
+        <form method="post">
+            {% csrf_token %}
+            <table class="table">
+                {{ form_data.as_table }}
+                <tr>
+                    <td></td>
+                    <td>
+                        <a href="/calendar/" class="btn btn-secondary">Cancel</a>
+                        <input type="submit" class="btn btn-primary" name="add" value="Add event to calendar">
+                    </td>
+                </tr>
+            </table>
+        </form>
     </div>
-
-    
-</body>
-
-</html>
+</div>
+{% endblock %}
