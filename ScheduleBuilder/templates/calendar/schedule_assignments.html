@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}
+Schedule Assignments Page
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="jumbotron">
+        <h2 style="color: rgb(100, 95, 95);">Schedule Assignments</h2>
+        <form method="post">
+            {% csrf_token %}
+            <table class="table">
+                <!-- Add fields for scheduling assignments, you can customize this part based on your requirements -->
+                <tr>
+                    <td>{{ form_data.event_name.label_tag }}</td>
+                    <td>{{ form_data.event_name }}</td>
+                </tr>
+                <tr>
+                    <td>{{ form_data.class_name.label_tag }}</td>
+                    <td>{{ form_data.class_name }}</td>
+                </tr>
+                <!-- Add other fields as needed -->
+                <tr>
+                    <td></td>
+                    <td>
+                        <a href="/calendar/" class="btn btn-secondary">Cancel</a>
+                        <input type="submit" class="btn btn-primary" name="schedule" value="Schedule Assignment">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -11,6 +11,10 @@ from icalendar import Calendar
 import requests
 from datetime import datetime
 import re
+from .scheduler import get_user_busy_times, schedule_assignments, add_assignments_to_calendar
+from django.forms import formset_factory
+EventFormSet = formset_factory(EventForm, extra=5)
+
 
 # constants for connecting to google calendar API
 CAL_ID = config('CAL_ID')
@@ -68,6 +72,38 @@ def get_recurrence_rule(option, due_date):
     recurrence_rule = recurrence_rules.get(option, '')
     return recurrence_rule
 
+
+def schedule(request):
+    results = []
+    context = {"results": results}
+
+    # Dummy data for testing form
+    dummy_data = [
+        {'event_name': 'Assignment 1', 'class_name': 'Class A', 'due_date': '2023-12-01'},
+        {'event_name': 'Assignment 2', 'class_name': 'Class B', 'due_date': '2023-12-05'},
+        # Add more dummy data as needed
+    ]
+
+    add_formset = EventFormSet(prefix='assignments', initial=dummy_data)
+
+    if request.method == 'POST':
+        if 'schedule' in request.POST:
+            # Get user's busy times
+            busy_times = get_user_busy_times()
+
+            # Get assignments from the formset
+            assignments = add_formset.save(commit=False)
+
+            # Schedule assignments
+            scheduled_assignments = schedule_assignments(assignments, busy_times)
+
+            # Add scheduled assignments to Google Calendar
+            add_assignments_to_calendar(scheduled_assignments)
+
+            return redirect('/calendar/')
+
+    context['formset'] = add_formset
+    return render(request, 'calendar/schedule.html', context)
 
 # View for localhost/calendar/add/
 def add(request):

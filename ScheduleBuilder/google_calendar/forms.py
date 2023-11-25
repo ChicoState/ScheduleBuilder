@@ -11,6 +11,24 @@ RECURRING_OPTIONS = [
     ('yearly', 'Yearly'),
 ]
 
+class AssignmentForm(forms.ModelForm):
+    event = forms.ModelChoiceField(queryset=Event.objects.all(), widget=forms.HiddenInput(), required=False)
+
+    class Meta:
+        model = Event  # Reuse the Event model for assignments
+        fields = (
+            'event',
+            'event_name',
+            'class_name',
+            'start_date',
+            'due_date',
+            'time_to_spend',
+            'amount_per_week',
+            'priority',
+            'progress',
+            'submission_type',
+        )
+
 # form for adding an event model into the database / calendar
 class EventForm(forms.ModelForm):
     event_name = forms.CharField(widget=forms.TextInput(attrs={'size': '80'}), required=True)

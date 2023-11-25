@@ -11,7 +11,7 @@ class SubmitType(models.Model):
 
 # Model for an event to be added into google calendar
 class Event(models.Model):
-    event_name = models.CharField(default="Event", verbose_name="Event Title", max_length=60)
+    event_name = models.CharField(default="Assignment", verbose_name="Assignment Title", max_length=60)
     class_name = models.CharField(verbose_name="Assignment's class", max_length=9)
     start_date = models.DateField(default=datetime.date.today)
     due_date = models.DateField(default=datetime.date.today)
@@ -27,6 +27,7 @@ class Event(models.Model):
         choices=[('not started', 'Not Started'), ('in progress', 'In Progress'), ('completed', 'Completed')],
         default='not started'   
     )
+    submission_type = models.ForeignKey(SubmitType, on_delete=models.CASCADE, null=True, blank=True)
     
 class EditEvent(models.Model):
     event_name = models.CharField(default="Event", verbose_name="Event Title", max_length=60)
