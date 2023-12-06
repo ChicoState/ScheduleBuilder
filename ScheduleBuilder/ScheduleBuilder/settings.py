@@ -49,6 +49,8 @@ DEBUG = True
 # debug thing, I'll probably get rid of this
 ALLOWED_HOSTS = ['*']
 
+AUTH_USER_MODEL = "account.Account"
+
 
 DATE_INPUT_FORMATS = ['%Y-%m-%d','%m/%d/%Y','%m/%d/%y']
 
@@ -179,6 +181,9 @@ STATICFILES_DIRS = [ STATIC_DIR ]
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+BASE_URL = "http://127.0.0.1:8000"
+
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',

@@ -20,8 +20,10 @@ from django.views.generic import TemplateView
 from django.contrib.auth.views import LogoutView, LoginView
 from core import views as core_views
 from google_calendar import views as cal_views
+from account import views as acc_views
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import LogoutView
+from django.conf.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,15 +31,17 @@ urlpatterns = [
     path('calendar/', cal_views.main, name='calendar'),
     path('icalendar/', cal_views.icalendar, name='icalendar-add'),
     path('calendar/add_assignment/',cal_views.add, name='calendar-add'),
-    path('calendar/create_calendar/', cal_views.create_calendar, name='create calendar'),
-    path('accounts/', include('allauth.urls')),
+    path('register/', acc_views.registration, name='register'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('login/', core_views.user_login, name='login'),
     path('parser/', core_views.parser, name='parser'),
+    path('accounts/', include('allauth.urls')),
+    path('account/', include('account.urls', namespace='account')),
+    path('search/', acc_views.account_search_view, name="search"),
+    path('friend/', include('friend.urls', namespace='friend')),
+    path('calendar/edit_assignment/', cal_views.edit_event, name='calender-edit'),
+    path('calendar/edit/', cal_views.edit_event, name='edit_event'),
+    path('update_event/', cal_views.edit_event, name='update_event'),
+    path('calendar/delete_assignment/', cal_views.delete, name='calender-delete'),
     path('calendar/delete/',cal_views.delete, name='calendar-delete'),
-    path("~redirect/", view=core_views.UserRedirectView.as_view(), name="redirect"),
-    path('register/', core_views.registration, name='register'),
-    
-    
 ]
-# template_name='google-auth/test.html'

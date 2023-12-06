@@ -70,3 +70,56 @@ class EventForm(forms.ModelForm):
         model = Event
         # fields = ('assignment_name' , 'class_name', 'submission_type', 'assigned_date', 'due_date')
         fields = ('event_name' , 'class_name', 'start_date', 'due_date', 'time_to_spend', 'priority', 'progress', 'repeat', 'repeat_until' )
+        
+class EditEventForm(forms.ModelForm):
+    event_name = forms.CharField(widget=forms.TextInput(attrs={'size': '50'}), required=True)
+    start_date = forms.DateField(
+        input_formats=DATE_INPUT_FORMATS,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'YYYY-MM-DD', 
+                'size': '50'
+            }
+        )
+    )
+    due_date = forms.DateField(
+        input_formats=DATE_INPUT_FORMATS,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'YYYY-MM-DD',  
+                'size': '50'
+            }
+        )
+    )
+    class Meta:
+        model = Event
+        fields = ('event_name' , 'start_date', 'due_date')
+    
+class DeleteEventForm(forms.ModelForm):
+    event_title = forms.CharField(widget=forms.TextInput(attrs={'size': '50'}), required=True)
+    start_date = forms.DateField(
+        input_formats=DATE_INPUT_FORMATS,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'YYYY-MM-DD', 
+                'size': '50'
+            }
+        )
+    )
+    due_date = forms.DateField(
+        input_formats=DATE_INPUT_FORMATS,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'YYYY-MM-DD',  
+                'size': '50'
+            }
+        )
+    )
+    
+    class Meta:
+        model = Event
+        fields = ('event_title' , 'start_date', 'due_date')
