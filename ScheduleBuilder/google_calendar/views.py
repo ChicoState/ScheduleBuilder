@@ -24,6 +24,12 @@ SERVICE_ACCOUNT_FILE = './core/calendar-credentials.json'
 @login_required(login_url='/login/')
 def main(request):
     results = []
+    credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    service = googleapiclient.discovery.build('calendar', 'v3', credentials=credentials)
+    calendar_list = service.calendarList().list().execute()
+    for calendar_list_entry in calendar_list['items']:
+        results.append(calendar_list_entry)
+        print(f"Name: {calendar_list_entry['summary']}  id = {calendar_list_entry['id']}")
     context = {"results": results}
     return render(request, 'calendar/calendar.html', context)
 
@@ -83,13 +89,14 @@ def create_calendar(request):
                 calendar = add_form.save(commit=False)
                 calendar.save()
                 name = add_form.cleaned_data['name']
+                name = name.strip(':')
                 calendar_attrs = {
                         'summary': name,
                 }
                 response = service.calendars().insert(body=calendar_attrs).execute()
                 print(response)
                 calendar_list = service.calendarList().list().execute()
-                print(calendar_list)
+                # print(calendar_list)
                 return redirect('/calendar/')
                 # if add form isnt valid
             else:
@@ -107,6 +114,12 @@ def create_calendar(request):
         return render(request, 'calendar/create_calendar.html', context)
 
     return HttpResponse("Create Calendar Page")
+
+@login_required(login_url='/login/')
+def delete_calendar(request):
+    credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    service = googleapiclient.discovery.build('calendar', 'v3', credentials=credentials)
+    
 
 # View for localhost/calendar/add/
 @login_required(login_url='/login/')
