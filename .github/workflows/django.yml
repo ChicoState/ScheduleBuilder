@@ -2,9 +2,9 @@ name: Build Django
 
 on:
   push:
-    branches: [ main ]
+    branches: [ tidyup ]
   pull_request:
-    branches: [ main ]
+    branches: [ tidyup ]
 
 jobs:
   build:
