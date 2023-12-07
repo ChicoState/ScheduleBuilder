@@ -13,13 +13,13 @@ Install all needed modules
 pip install -r requirements.txt
 ```
 
-Set your CAL_ID
-Locally
+Set your CAL_ID <br>
+Running locally
 ```bash
 set CAL_ID=c_6ed17073345c64d5b392f5a8ef7b4a62938f12c8fc5fecfa4b7256ef88acad28@group.calendar.google.com
 ```
-
-Virtual Enviroment
+**OR**<br>
+Running in virtual enviroment
 ```bash
 $env:CAL_ID = "c_6ed17073345c64d5b392f5a8ef7b4a62938f12c8fc5fecfa4b7256ef88acad28@group.calendar.google.com"
 ```
