@@ -1,4 +1,5 @@
 # ScheduleBuilder
+[![Build Django](https://github.com/ChicoState/ScheduleBuilder/blob/tidyup/.github/workflows/django.yml/badge.svg)](https://github.com/ChicoState/ScheduleBuilder/blob/tidyup/.github/workflows/django.yml)
 A schedule building application developed using the Django framework. Designed to streamline the scheduling process, optimizing time allocation, whether for individual use or planning with friends.
 
 ## Installation
