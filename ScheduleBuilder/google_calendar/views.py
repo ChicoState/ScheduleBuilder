@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from google_calendar.forms import EditEventForm, DeleteEventForm, EventForm, SubmitType
+from google_calendar.forms import EventForm, SubmitType
 
 from decouple import config
 from google.oauth2 import service_account
@@ -77,7 +77,7 @@ def add(request):
     if request.method == 'POST':
         if 'add' in request.POST:
             # form to add event
-            add_form = EventForm(request.POST)
+            add_form = EventForm(request.user, request.POST)
             if add_form.is_valid():
                 event = add_form.save(commit=False)
                 event.save()
@@ -87,13 +87,14 @@ def add(request):
                 # Get the recurrence option from the form
                 recurrence_option = add_form.cleaned_data.get('repeat')
                 recurrence_date = add_form.cleaned_data.get('repeat_until')
+                invited = add_form.cleaned_data.get('friends')
                 if recurrence_date:
                     recurrence_date = recurrence_date.isoformat()
                 recurrence_rule = None
 
                 if recurrence_option:
                     recurrence_rule = get_recurrence_rule(recurrence_option, recurrence_date)
-                event_description = f'Priority: {event.priority}\nProgress: {event.progress}\nTime to Spend: {event.time_to_spend}\nAmount per Week: {event.amount_per_week}'
+                event_description = f'Priority: {event.priority}\nProgress: {event.progress}\nTime to Spend: {event.time_to_spend}\nAmount per Week: {event.amount_per_week}\nFriends: {invited}'
                 # CREATE A NEW EVENT IN CALENDAR
                 new_event = {
                 'summary': add_form.cleaned_data['event_name'],
@@ -112,7 +113,7 @@ def add(request):
                     new_event['recurrence'] = [f'RRULE:{recurrence_rule}']
 
                 # add event to calendar
-                service.events().insert(calendarId=CAL_ID, body=new_event).execute()
+                service.events().insert(calendarId=CAL_ID, body=new_event, sendUpdates='all').execute()
                 print('EVENT CREATED')
                 return redirect('/calendar/')
             # if add form isnt valid
@@ -129,7 +130,7 @@ def add(request):
         event_name = request.GET.get('event_name', '')
         class_name = request.GET.get('class_name', '')
         due_date = request.GET.get('due_date', '')
-        form_data = EventForm(initial={'event_name': event_name, 'class_name': class_name, 'due_date': due_date})
+        form_data = EventForm(request.user, initial={'event_name': event_name, 'class_name': class_name, 'due_date': due_date})
         context = {
             'form_data' : form_data
         }
@@ -138,9 +139,11 @@ def add(request):
 def delete(request):
     event_title = request.GET.get('event_title')
     due_date = request.GET.get('due_date')
-    due_date = datetime.strptime(due_date, '%Y-%m-%d')
+    if due_date != None:
+        due_date = datetime.strptime(due_date, '%Y-%m-%d')
     start_date = request.GET.get('start_date')
-    start_date = datetime.strptime(start_date, '%Y-%m-%d')
+    if start_date != None:
+        start_date = datetime.strptime(start_date, '%Y-%m-%d')
     credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
     service = googleapiclient.discovery.build('calendar', 'v3', credentials=credentials)
     if request.method == 'GET':
@@ -218,7 +221,8 @@ def edit_event(request):
                         progress = extended_properties['Progress']
                         time_to_spend = extended_properties['Time to Spend']
                         amount_per_week = extended_properties['Amount per Week']
-                        form_data = EventForm(initial={
+                        friends = extended_properties['Friends']
+                        form_data = EventForm(request.user, initial={
                         'event_name': event.get('summary', ''), 
                         'class_name': event.get('location', ''),
                         'due_date': due_date_date.strftime('%Y-%m-%d'),
@@ -227,6 +231,7 @@ def edit_event(request):
                         'progress': progress,
                         'time_to_spend': time_to_spend,
                         'amount_per_week': amount_per_week,
+                        'friends': friends
                         }
                         )
                         context = {
@@ -247,7 +252,7 @@ def edit_event(request):
             orderBy='startTime'
             ).execute()
             # form to add event
-            add_form = EventForm(request.POST)
+            add_form = EventForm(request.user, request.POST)
             if add_form.is_valid():
                 event = add_form.save(commit=False)
                 event.save()
@@ -257,13 +262,14 @@ def edit_event(request):
                          # Get the recurrence option from the form
                 recurrence_option = add_form.cleaned_data.get('repeat')
                 recurrence_date = add_form.cleaned_data.get('repeat_until')
+                invited = add_form.cleaned_data.get('friends')
                 if recurrence_date:
                     recurrence_date = recurrence_date.isoformat()
                 recurrence_rule = None
 
                 if recurrence_option:
                     recurrence_rule = get_recurrence_rule(recurrence_option, recurrence_date)
-                event_description = f'Priority: {event.priority}\nProgress: {event.progress}\nTime to Spend: {event.time_to_spend}\nAmount per Week: {event.amount_per_week}'
+                event_description = f'Priority: {event.priority}\nProgress: {event.progress}\nTime to Spend: {event.time_to_spend}\nAmount per Week: {event.amount_per_week}\nFriends: {invited}'
                             # CREATE A NEW EVENT IN CALENDAR
                 new_event = {
                 'summary': add_form.cleaned_data['event_name'],
