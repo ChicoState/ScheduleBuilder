@@ -31,5 +31,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-              ls
-              pip install -r ScheduleBuilder/requirements.txt
+              cd ScheduleBuilder
+              pip install -r requirements.txt
+              python manage.py runserver
+              
