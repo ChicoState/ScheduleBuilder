@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+      - tidyup
   pull_request:
     branches:
       - main
+      - tidyup
 
 jobs:
   install:
