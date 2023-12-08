@@ -1,27 +1,27 @@
-name: Build Django
+name: Django Build
 
 on:
   push:
-    branches: [ tidyup ]
+    branches:
+      - main
   pull_request:
-    branches: [ tidyup ]
+    branches:
+      - main
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install django
-        pip install -r requirements.txt
-        python manage.py makemigrations
-        python manage.py migrate
-        python manage.py runserver
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+        working-directory: ./ScheduleBuilder
