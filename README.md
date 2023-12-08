@@ -1,4 +1,5 @@
 [![Django Build](https://github.com/ChicoState/ScheduleBuilder/actions/workflows/django.yml/badge.svg)](https://github.com/ChicoState/ScheduleBuilder/actions/workflows/django.yml)
+[![Django Tests](https://github.com/ChicoState/ScheduleBuilder/actions/workflows/tests.yml/badge.svg)](https://github.com/ChicoState/ScheduleBuilder/actions/workflows/tests.yml)
 # ScheduleBuilder
 A schedule building application developed using the Django framework. Designed to streamline the scheduling process, optimizing time allocation, whether for individual use or planning with friends.
 
