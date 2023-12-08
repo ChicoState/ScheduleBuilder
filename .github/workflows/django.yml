@@ -22,6 +22,6 @@ jobs:
           python-version: 3.11
 
       - name: Install dependencies
-        run: ls -l ./ScheduleBuilder 
-              pip install -r /ScheduleBuilder/requirements.txt
+        run: |
+              pip install -r .github/workflows/requirements.txt
         working-directory: ${{ github.workspace }}
