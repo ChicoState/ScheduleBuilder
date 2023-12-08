@@ -14,20 +14,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: 3.11
 
       - name: Install dependencies
-        run: |
-          cd ./ScheduleBuilder  # Change to the directory containing requirements.txt
-          if [ -f "requirements.txt" ]; then
-            pip install -r requirements.txt
-          else
-            echo "requirements.txt not found in the specified directory."
-            exit 1
-          fi
+        run: pip install -r ./ScheduleBuilder/requirements.txt
         working-directory: ${{ github.workspace }}
