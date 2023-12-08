@@ -31,3 +31,4 @@ uritemplate==4.1.1
 urllib3==1.26.16
 pdfplumber==0.10.3
 icalendar==5.0.11
+pytest==7.4.3
