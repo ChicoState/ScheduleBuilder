@@ -39,5 +39,4 @@ jobs:
         env:
           CAL_ID: c_6ed17073345c64d5b392f5a8ef7b4a62938f12c8fc5fecfa4b7256ef88acad28@group.calendar.google.com
         run: |
-          cd ScheduleBuilder
-          python manage.py test google_calendar
+          python ScheduleBuilder/manage.py test google_calendar
