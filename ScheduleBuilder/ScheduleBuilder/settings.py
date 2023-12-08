@@ -66,14 +66,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'allauth',
+    'account',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'friends',
     'dj_rest_auth',
     'rest_framework',
     # 'rest_framework.authtoken',
     'core',
     'google_calendar',
+    
 ]
 
 # django.core.exceptions.ImproperlyConfigured: You must include `rest_framework.authtoken` in INSTALLED_APPS or set TOKEN_MODEL to None
