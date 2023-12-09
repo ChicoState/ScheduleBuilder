@@ -41,10 +41,6 @@ jobs:
           cd ScheduleBuilder/google_calendar
           pytest --cov=./ --cov-report=xml test.py
 
-      - name: List files in ScheduleBuilder
-        run: |
-          ls -l ./ScheduleBuilder/google_calendar
-
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v3
         env:
