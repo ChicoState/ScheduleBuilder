@@ -1,0 +1,26 @@
+{% load socialaccount %}
+<html>
+
+<head>
+    <title>Google Registration</title>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+    <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="" rel="stylesheet">
+</head>
+
+<body>
+    <h1>My Google Login Project</h1>
+    {% if user.is_authenticated %}
+    <p>Welcome, {{ user.username }} !</p>
+
+    {% else %}
+    <h1>My Google Login Project</h1>
+    <a href="{% provider_login_url 'google' %}">Login with Google</a>
+    {% endif %}
+
+</body>
+
+</html>

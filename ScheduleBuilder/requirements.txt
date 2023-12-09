@@ -13,6 +13,10 @@ PyPDF2==3.0.1
 pandas==2.1.1
 nltk==3.8.1
 python-dateutil==2.8.2
+pdfplumber==0.10.2
+django-allauth==0.57.0
+dj-rest-auth==5.0.1
+google==3.0.0
 # Not sure if these are required, I'll get rid of them if they're not
 cachetools==5.3.1
 certifi==2023.7.22

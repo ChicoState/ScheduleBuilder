@@ -1,5 +1,5 @@
 from django import forms
-from google_calendar.models import SubmitType, Event
+from google_calendar.models import SubmitType, Event, Calendar
 from friend.models import FriendList
 
 # Valid date formats 
@@ -12,6 +12,11 @@ RECURRING_OPTIONS = [
     ('yearly', 'Yearly'),
 ]
 
+class CalendarForm(forms.ModelForm):
+    name = forms.CharField(widget=forms.TextInput(attrs={'size':'80'}))
+    class Meta:
+        model = Calendar
+        fields = ('name',)
 # form for adding an event model into the database / calendar
 class EventForm(forms.ModelForm):
     event_name = forms.CharField(widget=forms.TextInput(attrs={'size': '80'}), required=True)

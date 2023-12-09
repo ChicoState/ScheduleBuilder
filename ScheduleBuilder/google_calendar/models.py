@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 import datetime
 
 # This isn't working yet, I'm trying to allow only certain types of submission type choices
@@ -8,6 +9,11 @@ class SubmitType(models.Model):
     submission_type = models.CharField(max_length=15, choices=SUB_TYPES, default="File Upload")
     def __str__(self):
         return self.submission_type
+
+class Calendar(models.Model):
+    # user = models.ForeignKey(User, on_delete=models.CASCADE,)
+    
+    calendar_name = models.CharField(verbose_name="Calendar Title", max_length=30)
 
 # Model for an event to be added into google calendar
 class Event(models.Model):

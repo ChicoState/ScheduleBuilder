@@ -1,15 +1,22 @@
 # core/views.py
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from .forms import UploadFileForm
 from PyPDF2 import PdfReader
-import os
-import tempfile
 from .assignment_parser import assignment_parser
 from .ScheduleParser import parse_keywords, parse_tables, parse_schedule, extract_grade_breakdown
+import os
+import tempfile
 import pdfplumber
 import re
 import pandas as pd
+
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from dj_rest_auth.registration.views import SocialLoginView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import RedirectView
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
@@ -136,5 +143,38 @@ def parser(request):
 
     return render(request, 'parser/parser.html', {'form': form})
 
+def registration(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('home')  # Redirect to the home page after successful registration
+    else:
+        form = RegistrationForm()
+    return render(request, 'registration/registration.html', {'form': form})
 
 
+
+
+class GoogleLoginView(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
+    callback_url = 'http://127.0.0.1'
+    client_class = OAuth2Client
+    template_name = 'google-auth/test.html'
+    authentication_classes = [] #disables authentication
+    permission_classes = [] #disables permission
+    
+
+class UserRedirectView(LoginRequiredMixin, RedirectView):
+    """
+    This view is needed by the dj-rest-auth-library in order to work the google login. It's a bug.
+    """
+
+    permanent = False
+
+    def get_redirect_url(self):
+        return "google-auth/test.html"
+
+def user_login(request):
+    return render(request, template_name='google-auth/test.html')
