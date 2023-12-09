@@ -43,7 +43,7 @@ jobs:
 
       - name: List files in ScheduleBuilder
         run: |
-          ls -l ./ScheduleBuilder/
+          ls -l ./ScheduleBuilder/google_calendar
 
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v3
@@ -51,5 +51,5 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./ScheduleBuilder/coverage.xml
+          files: ./ScheduleBuilder/google_calendar/coverage.xml
           fail_ci_if_error: true
