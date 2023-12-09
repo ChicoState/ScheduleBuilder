@@ -1,5 +1,4 @@
-name: Django Tests
-
+name: Django Coverage
 on:
   push:
     branches:
@@ -42,7 +41,11 @@ jobs:
           cd ScheduleBuilder/google_calendar
           pytest --cov=./ test.py
 
-      - name: Display Coverage Report
-        run: |
-          cd ScheduleBuilder/google_calendar
-          pytest --cov-report term --cov=./ test.py
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: ./ScheduleBuilder/google_calendar
+          fail_ci_if_error: true
