@@ -47,5 +47,5 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./ScheduleBuilder/google_calendar/coverage.xml
+          files: ./ScheduleBuilder/coverage.xml
           fail_ci_if_error: true
