@@ -42,3 +42,37 @@ python manage.py runserver
 ```
 
 Then go to the browser and enter the url **http://127.0.0.1:8000/**
+
+# Sprint History (Development Process)
+
+## Sprint 1 (Week 3 -> Week 6)
+* Initial project planning
+* Initial Django project setup
+* Assignment parser
+    - Upload assignment and parse out important information
+* Syllabus parser
+    - Upload syllabus and parse out important information 
+* Initial Google Calendar API setup
+    - Able to add events to calendar
+
+## Sprint 2 (Week 7 -> Week 10)
+* Improved UI
+    - Nav bar
+    - Login page
+    - Home page
+    - Canvas login page
+* User login/registration
+* Ability to delete events
+* Additional options added to add event
+    - Recurrence
+    - Priority
+* iCalendar API implementation
+
+## Sprint 3 (Week 11 -> Week 15)
+* Ability to edit events
+* Friend system
+    - Add friends
+    - Remove friends
+    - Add friends to events
+* PyTest
+    - Implementated unit tests for google calendar
