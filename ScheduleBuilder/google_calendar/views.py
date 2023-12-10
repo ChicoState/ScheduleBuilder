@@ -292,12 +292,14 @@ def edit_event(request):
                     if due_date_var:
                         due_date_string = due_date_var['date']
                         due_date_date = datetime.strptime(due_date_string, '%Y-%m-%d')
-                        due_date = datetime.strptime(due_date, '%Y-%m-%d')
+                        if not isinstance(due_date, datetime):
+                            due_date = datetime.strptime(due_date, '%Y-%m-%d')
                     start_date_var = event.get('start', '')
                     if start_date_var:
                         start_date_string = start_date_var['date']
                         start_date_date = datetime.strptime(start_date_string, '%Y-%m-%d')
-                        start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                        if not isinstance(start_date, datetime):
+                            start_date = datetime.strptime(start_date, '%Y-%m-%d')
                     if event.get('summary', '') == add_form.cleaned_data['event_name']:
                         if due_date_date.date() == due_date.date() and start_date_date.date() == start_date.date():
                             event_id = event.get('id', '')
