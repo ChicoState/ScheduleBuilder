@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - main
-      - tidyup
+      - COV
   pull_request:
     branches:
       - main
-      - tidyup
+      - COV
 
 jobs:
   install:
