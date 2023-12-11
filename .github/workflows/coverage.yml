@@ -39,7 +39,7 @@ jobs:
           CAL_ID: c_6ed17073345c64d5b392f5a8ef7b4a62938f12c8fc5fecfa4b7256ef88acad28@group.calendar.google.com
         run: |
           cd ScheduleBuilder/google_calendar
-          pytest --cov=./ --cov-report=xml test.py
+          pytest --cov=./ test.py
 
 
       - name: Run Account Tests with Coverage
@@ -50,13 +50,13 @@ jobs:
           python manage.py makemigrations
           python manage.py migrate
           cd account
-          pytest --cov=./ --cov-report=xml regtests.py
+          pytest --cov=./ regtests.py
 
           
       - name: Combine Coverage Reports
         run: |
           cd ScheduleBuilder
-          coverage combine google_calendar/coverage.xml account/coverage.xml
+          coverage combine google_calendar/.coverage account/.coverage
           coverage xml -o combined_coverage.xml
 
       - name: Upload Coverage to Codecov
