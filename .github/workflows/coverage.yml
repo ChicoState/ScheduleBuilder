@@ -3,11 +3,11 @@ on:
   push:
     branches:
       - main
-      - COV
+      - coverage
   pull_request:
     branches:
       - main
-      - COV
+      - coverage
 
 jobs:
   install:
@@ -34,14 +34,6 @@ jobs:
           cd ScheduleBuilder
           pip install -r requirements.txt
 
-      - name: Run Google Calendar Tests with Coverage
-        env:
-          CAL_ID: c_6ed17073345c64d5b392f5a8ef7b4a62938f12c8fc5fecfa4b7256ef88acad28@group.calendar.google.com
-        run: |
-          cd ScheduleBuilder/google_calendar
-          pytest --cov=./ test.py
-
-
       - name: Run Account Tests with Coverage
         env:
           CAL_ID: c_6ed17073345c64d5b392f5a8ef7b4a62938f12c8fc5fecfa4b7256ef88acad28@group.calendar.google.com
@@ -53,11 +45,11 @@ jobs:
           pytest --cov=./ regtests.py
 
           
-      - name: Combine Coverage Reports
+      - name: Create Coverage Report
         run: |
           cd ScheduleBuilder
-          coverage combine google_calendar/.coverage account/.coverage
-          coverage xml -o combined_coverage.xml
+          coverage combine account/.coverage
+          coverage xml -o coverage.xml
 
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v3
@@ -65,5 +57,5 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./ScheduleBuilder/combined_coverage.xml
+          files: ./ScheduleBuilder/coverage.xml
           fail_ci_if_error: true
