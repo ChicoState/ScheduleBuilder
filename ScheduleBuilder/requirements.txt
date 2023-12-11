@@ -34,4 +34,3 @@ icalendar==5.0.11
 pytest==7.4.3
 pytest-django==4.7.0
 pytest-cov==4.1.0
-

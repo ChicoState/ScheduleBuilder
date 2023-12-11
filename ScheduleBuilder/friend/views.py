@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 import json
 
-from profile.models import Account
+from account.models import Account
 from friend.models import FriendRequest, FriendList
 
 
