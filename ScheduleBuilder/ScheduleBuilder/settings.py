@@ -33,7 +33,7 @@ DEBUG = True
 # debug thing, I'll probably get rid of this
 ALLOWED_HOSTS = ['*']
 
-AUTH_USER_MODEL = "account.Account"
+AUTH_USER_MODEL = "profile.Account"
 
 
 DATE_INPUT_FORMATS = ['%Y-%m-%d','%m/%d/%Y','%m/%d/%y']
@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'google_calendar',
-    'account',
+    'profile',
     'friend',
 ]
 
