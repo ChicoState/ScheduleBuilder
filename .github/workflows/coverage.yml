@@ -38,18 +38,20 @@ jobs:
         env:
           CAL_ID: c_6ed17073345c64d5b392f5a8ef7b4a62938f12c8fc5fecfa4b7256ef88acad28@group.calendar.google.com
         run: |
+          cd ScheduleBuilder/google_calendar
+          pytest --cov=./ --cov-report=xml test.py
+
+
+      - name: Run Account Tests with Coverage
+        env:
+          CAL_ID: c_6ed17073345c64d5b392f5a8ef7b4a62938f12c8fc5fecfa4b7256ef88acad28@group.calendar.google.com
+        run: |
           cd ScheduleBuilder
           python manage.py makemigrations
           python manage.py migrate
           cd account
           pytest --cov=./ --cov-report=xml regtests.py
 
-      - name: Run Account Tests with Coverage
-        env:
-          CAL_ID: c_6ed17073345c64d5b392f5a8ef7b4a62938f12c8fc5fecfa4b7256ef88acad28@group.calendar.google.com
-        run: |
-          cd ScheduleBuilder/account
-          pytest --cov=./ --cov-report=xml test.py
           
       - name: Combine Coverage Reports
         run: |
