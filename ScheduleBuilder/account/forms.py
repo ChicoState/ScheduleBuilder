@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from profile.models import Account
+from account.models import Account
 
 class RegistrationForm(UserCreationForm):
 	email = forms.EmailField(max_length=254, help_text='Required. Add a valid email address.')

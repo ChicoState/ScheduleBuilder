@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from profile.models import Account
+from account.models import Account
 
 
 
