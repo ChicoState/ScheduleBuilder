@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.test import Client
 from unittest.mock import Mock, patch
 import requests
-from profile.models import *
+from account.models import *
 
 @pytest.mark.django_db
 def test_create_user():
