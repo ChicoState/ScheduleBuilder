@@ -1,0 +1,43 @@
+name: Django Build
+
+on:
+  push:
+    branches:
+      - main
+      - tidyup
+  pull_request:
+    branches:
+      - main
+      - tidyup
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: |
+            sudo apt-get update
+
+  build:
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.11
+
+      - name: Install Dependencies
+        run: |
+          cd ScheduleBuilder
+          pip install -r requirements.txt
+
+      - name: Server Start
+        env:
+          CAL_ID: c_6ed17073345c64d5b392f5a8ef7b4a62938f12c8fc5fecfa4b7256ef88acad28@group.calendar.google.com
+        run: |
+          cd ScheduleBuilder
+          (python manage.py runserver & sleep 5; kill $!) &

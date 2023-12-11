@@ -7,10 +7,13 @@
 ScheduleBuilder/.env
 
 # this token contains your sensitive google service account info
-calendar-credentials.json
+#calendar-credentials.json
 __pycache__/
 # Ignore credential file with secret keys
 ScheduleBuilder/core/credentials.json
 
 # Ignore .DS_Store Mac metadata for directories
 **/.DS_Store
+
+#No need to push DB
+ScheduleBuilder\ScheduleBuilder\db.sqlite3
