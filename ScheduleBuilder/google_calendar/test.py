@@ -1,5 +1,5 @@
 from google_calendar.views import *
-from profile.views import *
+from account.views import *
 from django.urls import reverse
 from django.test import Client
 from unittest.mock import Mock, patch
