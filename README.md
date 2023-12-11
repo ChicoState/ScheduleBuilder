@@ -76,4 +76,8 @@ Then go to the browser and enter the url **http://127.0.0.1:8000/**
     - Remove friends
     - Add friends to events
 * PyTest
-    - Implementated unit tests for google calendar
+    - Implementated unit tests for google calendar and accounts
+* CI/CD
+    - Django build badge
+    - Django tests badge
+    - Test coverage badge
